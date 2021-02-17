@@ -1,39 +1,32 @@
 <script lang="ts">
     import Invite_component from "./Invite_component.svelte";
     import Initialize_join_component from "./Initialize_join_component.svelte";
-    let todos: Array<{ text: string; completed: boolean }> = [];
-    let text = "";
-    let invite_code = "";
+    import Todolist from "./todolist.svelte";
+    import Auth from "./auth.svelte";
+
+    let currentPage: string = "initial";
+
+    const update_page = (event) => {
+        currentPage = event.detail.text;
+    };
 </script>
 
-<h2>Todolist: Make todos here!</h2>
-<form
-    on:submit|preventDefault={() => {
-        todos = [...todos, { text, completed: false }];
-        text = "";
-    }}
->
-    <input bind:value={text} />
-</form>
-<ul>
-    {#each todos as todo (todo.text)}
-        <li
-            class:completed={todo.completed}
-            on:click={() => {
-                todo.completed = !todo.completed;
-            }}
-        >
-            {todo.text}
-        </li>
-    {/each}
-</ul>
-
-<Invite_component />
-<Initialize_join_component />
-
-<!--  -->
-<style>
-    .completed {
-        text-decoration: line-through;
-    }
-</style>
+{#if currentPage == "Auth"}
+    <Auth />
+    <button
+        on:click={() => {
+            currentPage = "Todo";
+        }}>Change to todolist</button
+    >
+{:else if currentPage == "Todo"}
+    <Todolist />
+    <button
+        on:click={() => {
+            currentPage = "Auth";
+        }}>Change to Auth</button
+    >
+{:else if currentPage == "initial"}
+    <Initialize_join_component on:page_data_receive={update_page} />
+{:else if currentPage == "invite"}
+    <Invite_component />
+{/if}
