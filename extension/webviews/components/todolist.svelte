@@ -71,9 +71,9 @@
         text="";
         description="";
     }}>
-        <label>Todo</label>
+        <p>Todo</p>
         <input bind:value={text}  />
-        <label>Description</label>
+        <p>Description</p>
         <textarea bind:value={description}  />
 
         <!-- Code for categories -->
