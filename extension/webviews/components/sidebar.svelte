@@ -5,7 +5,7 @@
     import Auth from "./auth.svelte";
 
     let currentPage: string = "initial";
-
+    // This even listner will update the currentPage based on changes from component button press
     const update_page = (event) => {
         currentPage = event.detail.text;
     };
@@ -28,5 +28,5 @@
 {:else if currentPage == "initial"}
     <Initialize_join_component on:page_data_receive={update_page} />
 {:else if currentPage == "invite"}
-    <Invite_component />
+    <Invite_component on:page_data_receive={update_page} />
 {/if}

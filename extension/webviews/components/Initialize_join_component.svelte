@@ -2,7 +2,7 @@
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
     const onSubmit = (data: string) => {
-        if (data == "Auth") {
+        if (data === "Auth") {
             dispatch("page_data_receive", { text: "Auth" });
         } else {
             dispatch("page_data_receive", { text: "invite" });
