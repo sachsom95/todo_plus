@@ -40,6 +40,9 @@
         margin-right: 15px;
         font-size: small;
     }
+    .todolist{
+        padding-left:0;
+    }
     .todo-text{
         width:100%;
     }
@@ -54,6 +57,11 @@
     }
     .description{
         margin:2px;
+    }
+    .icon-align-fix {
+        position: relative;
+        margin-right: 2px;
+        top: 2px;
     }
 </style>
 <h2>Todolist: Make todos here!</h2>
@@ -97,7 +105,7 @@
 
 <hr/>
 <p>View Todos</p>
-<ul>
+<ul class="todolist">
     {#each todos as todo (todo.text)}
         <li class:completed={todo.completed}
             class="todoitem"
@@ -112,13 +120,13 @@
         <div class="interaction-buttons">
             <div class="icon-text">
                 <div class="icon">
-                    <i class="codicon codicon-issues"></i>
+                    <i class="codicon codicon-issues icon-align-fix"></i>
                 </div>
                 <p>Push as an issue</p>
             </div>
             <div class="icon-text">
                 <div class="icon">
-                    <i class="codicon codicon-trash"></i>
+                    <i class="codicon codicon-trash icon-align-fix"></i>
                 </div>
                 <p>Delete</p>
             </div>
