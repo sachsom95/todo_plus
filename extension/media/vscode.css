@@ -34,6 +34,12 @@ a {
 	color: var(--vscode-textLink-foreground);
 }
 
+select,option{
+	background-color: var(--vscode-input-background);
+	color:var(--vscode-button-foreground);
+	border-color: var(--vscode-input-background);;
+}
+
 a:hover,
 a:active {
 	color: var(--vscode-textLink-activeForeground);
