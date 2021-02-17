@@ -1,4 +1,6 @@
 <script lang="ts">
+    import Invite_component from "./Invite_component.svelte";
+    import Initialize_join_component from "./Initialize_join_component.svelte";
     let todos: Array<{ text: string; completed: boolean }> = [];
     let text = "";
     let invite_code = "";
@@ -26,27 +28,12 @@
     {/each}
 </ul>
 
-<h2>Invite</h2>
-<form on:submit|preventDefault={() => {}}>
-    <input bind:value={invite_code} placeholder="Insert invite code" />
-</form>
+<Invite_component />
+<Initialize_join_component />
 
-<button class:btn_inline={true}>Enter</button>
-<button class:btn_inline={true}>Cancel</button>
-
+<!--  -->
 <style>
-    h2 {
-        color: orange;
-    }
     .completed {
         text-decoration: line-through;
-    }
-
-    .btn_inline {
-        display: inline;
-        width: 49%;
-    }
-    ::placeholder {
-        text-align: center;
     }
 </style>
