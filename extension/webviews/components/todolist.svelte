@@ -1,18 +1,40 @@
 <script lang="ts">
-    let todos: Array<{
-        text: string;
-        description: string;
-        completed: boolean;
-    }> = [];
-    let text = "";
-    let makeTodoVisiblity = false;
+    import { TodoList } from '../../src/entities/TodoList'
+    import { TodoItem } from '../../src/entities/TodoItem'
+
+    let loading = true;
+    let title = "";
+    let makeTodoVisiblity = true;
     let description = "";
+
+    let todoList : TodoList;
+
+    ( async () => {
+        todoList = await TodoList.fetch("4RSPNEodf5oweYDlBFzW");
+        // todoList = await TodoList.create("My First Todolist!");
+        loading = false; 
+    })();
+
+    async function addTodo(title: string, description: string) : Promise<void> {
+        loading = true;
+        await TodoItem.create(title, description, todoList);
+        todoList = todoList;
+        loading = false;
+    }
+
+    async function deleteTodo(todoItem: TodoItem) : Promise<void> {
+        loading = true;
+        await todoList.removeTodoItem(todoItem);
+        todoList = todoList;
+        loading = false;
+    }
+    
     // code for categories
     // let selectedCategory='Select Category'
     // let categories=['category1','category2','category3']
 </script>
 
-<h2>Todolist: Make todos here!</h2>
+<h2>{#if todoList === undefined}Initializing...{:else}{todoList.name}{/if}</h2>
 <div
     class="maketodo-toggle"
     on:click={() => {
@@ -26,16 +48,17 @@
         <div class="icon"><i class="codicon codicon-chevron-down" /></div>
     {/if}
 </div>
-{#if makeTodoVisiblity}
+{#if makeTodoVisiblity && todoList !== undefined}
     <form
         on:submit|preventDefault={() => {
-            todos = [...todos, { text, completed: false, description }];
-            text = "";
+            if (title === "") return;
+            addTodo(title, description);
+            title = "";
             description = "";
         }}
     >
         <p>Todo</p>
-        <input bind:value={text} />
+        <input bind:value={title} />
         <p>Description</p>
         <textarea bind:value={description} />
 
@@ -57,40 +80,55 @@
 {/if}
 
 <hr />
+
 <p>View Todos</p>
 <ul class="todolist">
-    {#each todos as todo (todo.text)}
-        <li
-            class:completed={todo.completed}
-            class="todoitem"
-            on:click={() => {
-                todo.completed = !todo.completed;
-            }}
-        >
-            <input class="todocheckbox" type="checkbox" checked={false} />
-            <div class="todo-text">
-                <h4>{todo.text}</h4>
-                <p class="description">{todo.description}</p>
-                <div class="interaction-buttons">
-                    <div class="icon-text">
-                        <div class="icon">
-                            <i class="codicon codicon-issues icon-align-fix" />
+    
+    <p class:hidden={!loading} class="transition">Loading...</p>
+
+    {#if todoList !== undefined}
+        {#each todoList.todoItems as todoItem (todoItem.id)}
+            <li class:completed={todoItem.completed} class="todoitem transition" >
+                <input class="todocheckbox" type="checkbox" checked={todoItem.completed} on:click={() => {
+                    todoItem.completed = !todoItem.completed;
+                }}
+                />
+                <div class="todo-text">
+                    <h4>{todoItem.title}</h4>
+                    <p class="description">{todoItem.description}</p>
+                    <div class="interaction-buttons">
+                        <div class="icon-text">
+                            <div class="icon">
+                                <i class="codicon codicon-issues icon-align-fix" />
+                            </div>
+                            <p>Push as an issue</p>
                         </div>
-                        <p>Push as an issue</p>
-                    </div>
-                    <div class="icon-text">
-                        <div class="icon">
-                            <i class="codicon codicon-trash icon-align-fix" />
+                        <div class="icon-text" on:click={deleteTodo(todoItem)}>
+                            <div class="icon">
+                                <i class="codicon codicon-trash icon-align-fix" />
+                            </div>
+                            <p>Delete</p>
                         </div>
-                        <p>Delete</p>
                     </div>
                 </div>
-            </div>
-        </li>
-    {/each}
+            </li>
+        {:else}
+            <p>Nothing seems to be here!</p>
+        {/each}
+
+    {/if}
 </ul>
 
 <style>
+
+    .hidden {
+        opacity: 0;
+    }
+
+    .transition {
+        transition: all 0.2s ease-in-out 0s;
+    }
+
     input {
         height: 25px;
     }
