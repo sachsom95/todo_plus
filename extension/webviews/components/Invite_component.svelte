@@ -4,8 +4,8 @@
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
     const onSubmit = (data: string) => {
-        if (data === "Auth") {
-            dispatch("page_data_receive", { text: "Auth" });
+        if (data === "initial") {
+            dispatch("page_data_receive", { text: "initial" });
         }
     };
 </script>
@@ -19,7 +19,7 @@
 </form>
 
 <button class="btn_inline">Enter</button>
-<button class="btn_inline" on:click={() => onSubmit("Auth")}>Cancel</button>
+<button class="btn_inline" on:click={() => onSubmit("initial")}>Cancel</button>
 
 <!-- Invite component -->
 <style>
