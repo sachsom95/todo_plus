@@ -12,19 +12,19 @@
 </script>
 
 {#if currentPage == "Auth"}
-    <Auth />
     <button
         on:click={() => {
             currentPage = "Todo";
         }}>Change to todolist</button
     >
+    <Auth />
 {:else if currentPage == "Todo"}
-    <Todolist />
     <button
         on:click={() => {
             currentPage = "Auth";
         }}>Change to Auth</button
     >
+    <Todolist />
 {:else if currentPage == "initial"}
     <Initialize_join_component on:page_data_receive={update_page} />
 {:else if currentPage == "invite"}
