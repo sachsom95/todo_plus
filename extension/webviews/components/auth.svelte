@@ -1,16 +1,27 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
+    const dispatch = createEventDispatcher();
+
+    function loginGitHub() {
+        dispatch("page_data_receive", { page: "notImplemented" });
+    }
+
+    function loginAnonymous() {
+        dispatch("page_data_receive", { page: "todoListJoinOptions" });
+    }
+
 </script>
 
 <div class="parent">
     <br />
-    <button type="submit">
+    <button on:click={loginGitHub} type="submit">
         <div class="icon">
             <i class="codicon codicon-github-inverted icon-align-fix" />
-            Login with Github
+            Sign In with GitHub
         </div>
     </button>
     <br />
-    <button type="submit">
+    <button on:click={loginAnonymous} type="submit">
         <div class="icon">
             <i class="codicon codicon-account icon-align-fix" />
             Sign In Anonymously

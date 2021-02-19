@@ -1,4 +1,4 @@
-import App from "../components/Invite_component.svelte";
+import App from "../components/joinTodoListInvite.svelte";
 
 const app = new App({
     target: document.body,
