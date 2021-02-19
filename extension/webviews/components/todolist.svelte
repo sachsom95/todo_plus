@@ -1,6 +1,8 @@
 <script lang="ts">
+    import TodoCode from './todoCode.svelte';
+
     import { TodoList } from '../../src/entities/TodoList'
-    import { TodoItem } from '../../src/entities/TodoItem'
+    import { TodoItem } from '../../src/entities/TodoItem'    
 
     let loading = true;
     let title = "";
@@ -34,7 +36,10 @@
     // let categories=['category1','category2','category3']
 </script>
 
-<h2>{#if todoList === undefined}Initializing...{:else}{todoList.name}{/if}</h2>
+<h2 class="title">{todoList === undefined ? 'Loading...' : todoList.name}</h2>
+
+<TodoCode code={todoList ? todoList.id : ""}/>
+
 <div
     class="maketodo-toggle"
     on:click={() => {
@@ -121,6 +126,10 @@
 
 <style>
 
+    .title {
+        margin-bottom: 15px;
+    }
+
     .hidden {
         opacity: 0;
     }
@@ -142,12 +151,15 @@
     }
     .todoitem {
         display: flex;
+        margin-bottom: 10px;
     }
     h4 {
         font-weight: bold;
         text-transform: capitalize;
     }
     .todocheckbox {
+        position: relative;
+        top: -6px;
         margin-right: 10px;
     }
     input[type="checkbox"]:focus {
@@ -168,6 +180,7 @@
         width: 100%;
     }
     .maketodo-toggle {
+        margin-top: 15px;
         cursor: pointer;
         display: flex;
         justify-content: space-between;
