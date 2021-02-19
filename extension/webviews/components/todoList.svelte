@@ -4,6 +4,8 @@
     import { TodoList } from '../../src/entities/TodoList'
     import { TodoItem } from '../../src/entities/TodoItem'    
 
+    export let code: string;
+
     let loading = true;
     let title = "";
     let makeTodoVisiblity = true;
@@ -12,8 +14,11 @@
     let todoList : TodoList;
 
     ( async () => {
-        todoList = await TodoList.fetch("4RSPNEodf5oweYDlBFzW");
-        // todoList = await TodoList.create("My First Todolist!");
+        if (code !== undefined) {
+            todoList = await TodoList.fetch(code);
+        } else {
+            todoList = await TodoList.create("My First TodoList!");
+        }
         loading = false; 
     })();
 

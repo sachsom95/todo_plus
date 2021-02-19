@@ -1,25 +1,28 @@
 <script lang="ts">
-    let invite_code = "";
+    let inviteCode = "";
 
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
-    const onSubmit = (data: string) => {
-        if (data === "initial") {
-            dispatch("page_data_receive", { text: "initial" });
-        }
-    };
+
+    function cancel() {
+        dispatch("page_data_receive", { page: "todoListJoinOptions" });
+    }
+
+    function join() {
+        dispatch("page_data_receive", { page: "todoList", code: inviteCode });
+    }
 </script>
 
 <!-- Invite component -->
 
-<h4 class="p_heading">Invite</h4>
+<h4 class="p_heading">Join Todo List</h4>
 <p />
 <form on:submit|preventDefault={() => {}}>
-    <input bind:value={invite_code} placeholder="Insert invite code" />
+    <input bind:value={inviteCode} placeholder="Insert invite code" />
 </form>
 
-<button class="btn_inline">Enter</button>
-<button class="btn_inline" on:click={() => onSubmit("initial")}>Cancel</button>
+<button class="btn_inline" on:click={join}>Enter</button>
+<button class="btn_inline" on:click={cancel}>Cancel</button>
 
 <!-- Invite component -->
 <style>
@@ -35,8 +38,5 @@
     .btn_inline {
         display: inline;
         width: 49%;
-    }
-    ::placeholder {
-        text-align: center;
     }
 </style>

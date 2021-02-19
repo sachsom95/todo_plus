@@ -1,17 +1,46 @@
 <script lang="ts">
-    import Invite_component from "./Invite_component.svelte";
-    import Initialize_join_component from "./Initialize_join_component.svelte";
-    import Todolist from "./todolist.svelte";
+    import JoinTodoListInvite from "./joinTodoListInvite.svelte";
+    import TodoListJoinOptions from "./todoListJoinOptions.svelte";
+    import Todolist from "./todoList.svelte";
     import Auth from "./auth.svelte";
+    import NotImplemented from "./notImplemented.svelte";
 
-    let currentPage: string = "initial";
+    let currentPage: string = "auth";
+    let code: string;
     // This even listner will update the currentPage based on changes from component button press
-    const update_page = (event) => {
-        currentPage = event.detail.text;
+    const updatePage = (event : any) => {
+        currentPage = event.detail.page;
+
+        if (event?.detail?.code !== undefined) {
+            code = event.detail.code;
+        }
     };
 </script>
 
-{#if currentPage == "Auth"}
+{#if currentPage === "auth" || currentPage === "initial"}
+<Auth on:page_data_receive={updatePage}/>
+
+{:else if currentPage === "todoListJoinOptions"}
+<TodoListJoinOptions on:page_data_receive={updatePage}/>
+
+{:else if currentPage === "todoList"}
+<Todolist code={code} on:page_data_receive={updatePage}/>
+
+{:else if currentPage === "joinTodoListInvite"}
+<JoinTodoListInvite on:page_data_receive={updatePage}/>
+
+{:else if currentPage === "notImplemented"}
+<NotImplemented on:page_data_receive={updatePage}/>
+
+{:else}
+<p>Error 404</p>
+
+{/if}
+
+
+
+
+<!-- {#if currentPage == "Auth"}
     <button
         on:click={() => {
             currentPage = "Todo";
@@ -24,9 +53,9 @@
             currentPage = "Auth";
         }}>Change to Auth</button
     >
-    <Todolist />
+    
 {:else if currentPage == "initial"}
-    <Initialize_join_component on:page_data_receive={update_page} />
+    <Initialize_join_component on:page_data_receive={updatePage} />
 {:else if currentPage == "invite"}
-    <Invite_component on:page_data_receive={update_page} />
-{/if}
+    <Invite_component on:page_data_receive={updatePage} />
+{/if} -->
