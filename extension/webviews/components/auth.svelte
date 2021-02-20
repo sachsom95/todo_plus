@@ -20,7 +20,7 @@
     <hr class="divider_hr" />
 </div>
 <div class="parent">
-    <p class="text">
+    <p class="p_content">
         Login via Github to access saved todo lists and get access to all the
         collaborative and Github features.
     </p>
@@ -32,7 +32,7 @@
         </div>
     </button>
     <br />
-    <p class="text">
+    <p class="p_content">
         Create a quick todo list and share an invite code to collaborate with
         your team without loging into Github.
     </p>
@@ -60,10 +60,11 @@
     .divider_hr {
         border-top: 1px;
     }
-    .text {
+    .p_content {
         text-align: left;
         text-align-last: left;
         padding-top: 5px;
+        font-weight: 400;
     }
     .btn {
         padding-bottom: 10px;
