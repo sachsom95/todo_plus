@@ -17,12 +17,6 @@
     }
 </script>
 
-<!-- Invite component -->
-<div class="container">
-    <h1>Todo++</h1>
-    <hr class="divider_hr" />
-</div>
-
 <p class="p_heading">Join Todo List</p>
 <p class="p_content">
     Enter the access code to join todoList. press cancel to go back.
@@ -58,16 +52,14 @@
         padding-top: 10px;
         width: 49%;
     }
-    .divider_hr {
-        border-top: 1px;
-    }
 
     .form_input {
         padding-top: 10px;
         padding-bottom: 10px;
+        text-align: center;
     }
 
     ::placeholder {
-        text-align: left;
+        text-align: center;
     }
 </style>

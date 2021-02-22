@@ -36,26 +36,3 @@
 <p>Error 404</p>
 
 {/if}
-
-
-
-
-<!-- {#if currentPage == "Auth"}
-    <button
-        on:click={() => {
-            currentPage = "Todo";
-        }}>Change to todolist</button
-    >
-    <Auth />
-{:else if currentPage == "Todo"}
-    <button
-        on:click={() => {
-            currentPage = "Auth";
-        }}>Change to Auth</button
-    >
-    
-{:else if currentPage == "initial"}
-    <Initialize_join_component on:page_data_receive={updatePage} />
-{:else if currentPage == "invite"}
-    <Invite_component on:page_data_receive={updatePage} />
-{/if} -->

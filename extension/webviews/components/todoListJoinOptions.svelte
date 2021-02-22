@@ -14,11 +14,6 @@
     }
 </script>
 
-<div class="container">
-    <h1>Todo++</h1>
-    <hr class="divider_hr" />
-</div>
-
 <p class="p_heading">Create new collaborative todo list<br /></p>
 <p class="p_content">
     Use this option if you want to start a new todo list to share with other
@@ -52,8 +47,5 @@
     .btn {
         padding-bottom: 10px;
         padding-top: 10px;
-    }
-    .divider_hr {
-        border-top: 1px;
     }
 </style>

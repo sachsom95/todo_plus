@@ -44,10 +44,6 @@
     // let categories=['category1','category2','category3']
 </script>
 
-<div class="container">
-    <h1>Todo++</h1>
-    <hr class="divider_hr" />
-</div>
 <h2 class="title">{todoList === undefined ? "Loading..." : todoList.name}</h2>
 
 <TodoCode code={todoList ? todoList.id : ""} />
@@ -144,7 +140,7 @@
                     </div>
                 </li>
             {:else}
-                <p>Nothing seems to be here!</p>
+                <p>Add your first todo!</p>
             {/each}
         {/if}
     </ul>
@@ -159,9 +155,7 @@
         overflow-y: auto;
         max-height: 600px;
     }
-    .divider_hr {
-        border-top: 1px;
-    }
+    
     .title {
         margin-bottom: 15px;
     }

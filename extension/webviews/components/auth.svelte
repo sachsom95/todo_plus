@@ -15,10 +15,6 @@
     }
 </script>
 
-<div class="container">
-    <h1>Todo++</h1>
-    <hr class="divider_hr" />
-</div>
 <div class="parent">
     <p class="p_content">
         Login via Github to access saved todo lists and get access to all the
@@ -56,9 +52,6 @@
         position: relative;
         margin-right: 2px;
         top: 2px;
-    }
-    .divider_hr {
-        border-top: 1px;
     }
     .p_content {
         text-align: left;
