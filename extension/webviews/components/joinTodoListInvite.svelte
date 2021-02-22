@@ -11,13 +11,20 @@
     function join() {
         dispatch("page_data_receive", { page: "todoList", code: inviteCode });
     }
+
+    function onRightClick() {
+            navigator.clipboard.readText()
+            .then(text => {
+                inviteCode = text;
+            });
+        }
 </script>
 
 <!-- Invite component -->
 
 <h4 class="p_heading">Join Todo List</h4>
 <p />
-<form on:submit|preventDefault={() => {}}>
+<form on:submit|preventDefault={() => {}} on:contextmenu|preventDefault={onRightClick}>
     <input bind:value={inviteCode} placeholder="Insert invite code" />
 </form>
 
