@@ -9,13 +9,50 @@ export class TodoList {
 
     // Readonly properties as they should not be modified (for now at least).
     readonly id: string;
-    readonly name: string;
+    #name: string;
     todoItems: Array<TodoItem> = [];
+
+    updateCallback: any;
 
     // Create a local copy of the TodoList
     private constructor(id: string, name: string) {
         this.id = id;
-        this.name = name;
+        this.#name = name;
+        this.fetchAndListen();
+    }
+
+    fetchAndListen() {
+        const todoListRef = db.collection(TodoList.COLLECTION_NAME).doc(this.id);
+        todoListRef.onSnapshot( (doc) => {
+            let data = doc.data();
+            if (data === undefined) {
+                return;
+            }
+            this.#name = data.name;
+            if (this.updateCallback) {
+                this.updateCallback();
+            }
+        });
+
+        const todoItemsRef = db.collection(TodoList.COLLECTION_NAME).doc(this.id).collection(TodoItem.COLLECTION_NAME);
+        todoItemsRef.onSnapshot((snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                let doc = change.doc;
+                let data = doc.data();
+                var source = doc.metadata.hasPendingWrites ? "local" : "server";
+                if (change.type === "added") {
+                    let todoItem = new TodoItem(doc.id, this.id, data.category, data.title, data.description, data.completed, data.archived);
+                    this.addTodoItem(todoItem);
+                } else if (change.type === "modified" && source === "server") {
+                    this.updateTodoItem(doc.id, data.title, data.description, data.completed, data.archived);
+                } else if (change.type === "removed") {
+                    this.removeTodoItemFromList(doc.id);
+                }
+                if (this.updateCallback) {
+                    this.updateCallback();
+                }
+            });
+        });
     }
 
     // Returns all existing categories
@@ -32,18 +69,28 @@ export class TodoList {
     // Used to add a TodoList to the TodoList
     addTodoItem(todoItem: TodoItem) {
         this.todoItems = [todoItem, ...this.todoItems];
-        //this.todoItemArray.push(todoItem);
     }
 
-    // Used to remove a TodoItem from the TodoList
-    async removeTodoItem(todoItem: TodoItem) : Promise<void> {
-        const index = this.todoItems.indexOf(todoItem);
-        if (index > -1) {
-            this.todoItems.splice(index, 1);
-
-            const docRef = db.collection(TodoList.COLLECTION_NAME).doc(this.id).collection(TodoItem.COLLECTION_NAME).doc(todoItem.id);
-            await docRef.delete();
+    private updateTodoItem(id: string, title: string, description: string, completed: boolean, archived: boolean) {
+        let todoItem = this.todoItems.find( x => x.id === id);
+        if (todoItem !== undefined) {
+            todoItem.update(title, description, completed, archived);
         }
+    }
+
+    // Used to remove TodoItem from the local array
+    private removeTodoItemFromList(id: string) {
+        let index = this.todoItems.findIndex( x => x.id === id);
+        if (index !== -1) {
+            this.todoItems.splice(index, 1);
+        }
+    }
+
+    // Used to remove a TodoItem from the TodoList in Firestore
+    // This should trigger a listener which will automatically remove the item locally
+    async removeTodoItem(todoItem: TodoItem) : Promise<void> {
+        const docRef = db.collection(TodoList.COLLECTION_NAME).doc(this.id).collection(TodoItem.COLLECTION_NAME).doc(todoItem.id);
+        await docRef.delete();
     }
 
     // Create the TodoList in firebase and create a local copy
@@ -78,7 +125,11 @@ export class TodoList {
         const todoList = new TodoList(id, todoListSnapshot?.data()?.name);
 
         // Fetch all TodoItems belonging to this TodoList
-        await TodoItem.fetch(todoList);
+        // await TodoItem.fetch(todoList);
         return todoList;
+    }
+
+    get name() : string {
+        return this.#name;
     }
 }

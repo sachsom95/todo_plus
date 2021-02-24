@@ -19,20 +19,21 @@
         } else {
             todoList = await TodoList.create("My First TodoList!");
         }
+        todoList.updateCallback = () => {
+            todoList = todoList;
+        };
         loading = false; 
     })();
 
     async function addTodo(title: string, description: string) : Promise<void> {
         loading = true;
-        await TodoItem.create(title, description, todoList);
-        todoList = todoList;
+        await TodoItem.create(todoList.id, title, description);
         loading = false;
     }
 
     async function deleteTodo(todoItem: TodoItem) : Promise<void> {
         loading = true;
         await todoList.removeTodoItem(todoItem);
-        todoList = todoList;
         loading = false;
     }
     
