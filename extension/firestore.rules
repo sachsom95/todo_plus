@@ -27,7 +27,7 @@ service cloud.firestore {
             request.resource.data.description is string &&
             request.resource.data.title is string;             
         }
-	      allow delete;
+        allow delete;
         allow read;
         allow create, update: if validTodoItemStructure();
       }
