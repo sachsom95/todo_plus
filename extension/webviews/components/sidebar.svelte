@@ -7,12 +7,16 @@
 
     let currentPage: string = "auth";
     let code: string;
+    let auth:string;
     // This even listner will update the currentPage based on changes from component button press
     const updatePage = (event : any) => {
         currentPage = event.detail.page;
 
         if (event?.detail?.code !== undefined) {
             code = event.detail.code;
+        }
+        if (event?.detail?.auth !== undefined) {
+            auth = event.detail.auth;
         }
     };
 </script>
@@ -21,13 +25,13 @@
 <Auth on:page_data_receive={updatePage}/>
 
 {:else if currentPage === "todoListJoinOptions"}
-<TodoListJoinOptions on:page_data_receive={updatePage}/>
+<TodoListJoinOptions auth={auth} on:page_data_receive={updatePage}/>
 
 {:else if currentPage === "todoList"}
-<Todolist code={code} on:page_data_receive={updatePage}/>
+<Todolist code={code} auth={auth} on:page_data_receive={updatePage}/>
 
 {:else if currentPage === "joinTodoListInvite"}
-<JoinTodoListInvite on:page_data_receive={updatePage}/>
+<JoinTodoListInvite auth={auth} on:page_data_receive={updatePage}/>
 
 {:else if currentPage === "notImplemented"}
 <NotImplemented on:page_data_receive={updatePage}/>

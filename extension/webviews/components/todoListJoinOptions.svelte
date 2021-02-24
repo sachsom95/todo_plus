@@ -2,12 +2,14 @@
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
 
+    export let auth:string;
+
     function initTodoList() {
-        dispatch("page_data_receive", { page: "todoList" });
+        dispatch("page_data_receive", { page: "todoList",auth });
     }
 
     function joinTodoList() {
-        dispatch("page_data_receive", { page: "joinTodoListInvite" });
+        dispatch("page_data_receive", { page: "joinTodoListInvite",auth });
     }
 
 </script>

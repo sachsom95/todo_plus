@@ -5,6 +5,7 @@
     import { TodoItem } from '../../src/entities/TodoItem'    
 
     export let code: string;
+    export let auth: string;
 
     let loading = true;
     let title = "";
@@ -12,7 +13,7 @@
     let description = "";
 
     let todoList : TodoList;
-
+  
     ( async () => {
         if (code !== undefined) {
             todoList = await TodoList.fetch(code);
@@ -25,6 +26,8 @@
         loading = false; 
     })();
 
+    
+
     async function addTodo(title: string, description: string) : Promise<void> {
         loading = true;
         await TodoItem.create(todoList.id, title, description);
@@ -35,6 +38,10 @@
         loading = true;
         await todoList.removeTodoItem(todoItem);
         loading = false;
+    }
+
+    async function createIssue(title:string,description:string) {
+        await tsvscode.postMessage({type:"create-issue",value:{title,description}})
     }
     
     // code for categories
@@ -108,13 +115,15 @@
                     <h4>{todoItem.title}</h4>
                     <p class="description">{todoItem.description}</p>
                     <div class="interaction-buttons">
-                        <div class="icon-text">
-                            <div class="icon">
-                                <i class="codicon codicon-issues icon-align-fix" />
+                        {#if auth}
+                            <div class="icon-text">
+                                <div class="icon">
+                                    <i class="codicon codicon-issues icon-align-fix" />
+                                </div>
+                                    <p on:click={()=>createIssue(todoItem.title,todoItem.description)}>Push as an issue</p>   
                             </div>
-                            <p>Push as an issue</p>
-                        </div>
-                        <div class="icon-text" on:click={deleteTodo(todoItem)}>
+                        {/if}
+                        <div class="icon-text" on:click={()=>deleteTodo(todoItem)}>
                             <div class="icon">
                                 <i class="codicon codicon-trash icon-align-fix" />
                             </div>

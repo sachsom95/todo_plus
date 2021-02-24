@@ -1,13 +1,31 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
     const dispatch = createEventDispatcher();
+    let authStatus='';
 
-    function loginGitHub() {
-        dispatch("page_data_receive", { page: "notImplemented" });
+    onMount(async()=>{
+        window.addEventListener('message', async (event) => {
+        const message = event.data; 
+
+            switch (message.type) {
+                case 'auth-status':
+                    console.log("changinggg")
+                    authStatus = message.value
+                    if(authStatus=='authenticated'){
+                        dispatch("page_data_receive", { page: "todoListJoinOptions", auth:true });
+                    }else{
+                        dispatch("page_data_receive", { page: "todoListJoinOptions", auth:false });
+                    }
+            }
+        });
+    })
+
+    async function loginGitHub() {
+        await tsvscode.postMessage({type:"authenticate",value:undefined});
     }
 
-    function loginAnonymous() {
-        dispatch("page_data_receive", { page: "todoListJoinOptions" });
+    async function loginAnonymous() {
+        dispatch("page_data_receive", { page: "todoListJoinOptions", auth:false });
     }
 
 </script>
@@ -17,14 +35,14 @@
     <button on:click={loginGitHub} type="submit">
         <div class="icon">
             <i class="codicon codicon-github-inverted icon-align-fix" />
-            Sign In with GitHub
+            Continue with GitHub
         </div>
     </button>
     <br />
     <button on:click={loginAnonymous} type="submit">
         <div class="icon">
             <i class="codicon codicon-account icon-align-fix" />
-            Sign In Anonymously
+            Continue Anonymously
         </div>
     </button>
 </div>
