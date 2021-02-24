@@ -15,18 +15,35 @@
     function join() {
         dispatch("page_data_receive", { page: "todoList", code: inviteCode });
     }
+
+    function onRightClick() {
+            navigator.clipboard.readText()
+            .then(text => {
+                inviteCode = text;
+            });
+        }
 </script>
+
 
 <p class="p_heading">Join Todo List</p>
 <p class="p_content">
     Enter the access code to join todoList. press cancel to go back.
 </p>
-<form on:submit|preventDefault={() => {}}>
+<form on:submit|preventDefault={() => {}} on:contextmenu|preventDefault={onRightClick}>
     <input
         class="form_input"
         bind:value={inviteCode}
         placeholder=" Enter invite code"
     />
+  
+
+<!-- Invite component Lucas MR conflict fallback -->
+
+<!-- <h4 class="p_heading">Join Todo List</h4>
+<p />
+<form on:submit|preventDefault={() => {}} on:contextmenu|preventDefault={onRightClick}>
+    <input bind:value={inviteCode} placeholder="Insert invite code" /> -->
+
 </form>
 <div class="flex_box">
     <button class="btn_inline" on:click={join}>Enter</button>
