@@ -1,7 +1,6 @@
 import { TodoItem } from "./TodoItem";
 import firebase from "firebase/app";
 import { db } from "../firebaseConfig";
-import { abort } from "process";
 
 interface ITodoList {
     name?: string
