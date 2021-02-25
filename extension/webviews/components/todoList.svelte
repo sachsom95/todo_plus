@@ -16,6 +16,9 @@
 
     let todoList: TodoList;
 
+    let enableTodoListTitleEdit = false;
+    let todoListTitleEditText = "";
+
     (async () => {
         if (code !== undefined) {
             todoList = await TodoList.fetch(code);
@@ -26,8 +29,8 @@
         todoList.updateCallback = () => {
             todoList = todoList;
         };
-        loading = false; 
-
+        todoListTitleEditText = todoList.name;
+        loading = false;
     })();
 
     async function addTodo(title: string, description: string): Promise<void> {
@@ -42,12 +45,35 @@
         loading = false;
     }
 
+    async function updateTodoListName() : Promise<void> {
+        loading = true;
+        todoList.name = todoListTitleEditText;
+        enableTodoListTitleEdit = false;
+        loading = false;
+    }
+
     // code for categories
     // let selectedCategory='Select Category'
     // let categories=['category1','category2','category3']
 </script>
 
-<h2 class="title">{todoList === undefined ? "Loading..." : todoList.name}</h2>
+<div class="title">
+    {#if todoList === undefined}
+        <h2>Loading...</h2>
+    {:else}
+
+        {#if enableTodoListTitleEdit === false}
+            <h2>{todoList.name}</h2>
+            <div on:click={() => enableTodoListTitleEdit = true} class="icon"><i class="codicon codicon-edit" /></div>
+        {:else}
+            <input bind:value={todoListTitleEditText}>
+            <div on:click={(updateTodoListName)} class="icon"><i class="codicon codicon-check" /></div>
+        {/if}
+    {/if}
+</div>
+
+
+
 
 <TodoCode code={todoList ? todoList.id : ""} />
 
@@ -130,7 +156,7 @@
                             </div>
                             <div
                                 class="icon-text"
-                                on:click={deleteTodo(todoItem)}
+                                on:click={() => deleteTodo(todoItem)}
                             >
                                 <div class="icon">
                                     <i
@@ -160,7 +186,16 @@
     }
     
     .title {
+        display: flex;
+        align-items: center;
         margin-bottom: 15px;
+    }
+
+    .title i {
+        position: relative;
+        top: 3px;
+        margin-left: 5px;
+        cursor: pointer;
     }
 
     .hidden {
