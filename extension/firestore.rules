@@ -10,7 +10,7 @@ service cloud.firestore {
           request.resource.data.name is string;
       }
 
-      allow create: if validTodoListStructure();
+      allow create, update: if validTodoListStructure();
       allow get;
       allow list: if false;
       allow delete: if false;
