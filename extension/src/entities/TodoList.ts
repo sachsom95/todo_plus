@@ -2,6 +2,10 @@ import { TodoItem } from "./TodoItem";
 import firebase from "firebase/app";
 import { db } from "../firebaseConfig";
 
+interface ITodoList {
+    name?: string
+}
+
 export class TodoList {
 
     // Used for the Firestore collection name
@@ -131,5 +135,23 @@ export class TodoList {
 
     get name() : string {
         return this.#name;
+    }
+
+    set name(name: string) {
+        const previous = this.#name;
+        this.#name = name;
+        this.updateValue({name: name}).catch( (error) => {
+            console.error("Error writing document: " + error);
+            this.#name = previous;
+        });
+    }
+
+    private async updateValue(value: ITodoList) : Promise<void> {
+
+        // Reference pointing to this instance's Firestore document.
+        const docRef = db.collection(TodoList.COLLECTION_NAME).doc(this.id);
+
+        // Update the value in Firestore
+        await docRef.update(value);
     }
 }
