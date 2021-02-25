@@ -1,6 +1,7 @@
 import { TodoItem } from "./TodoItem";
 import firebase from "firebase/app";
 import { db } from "../firebaseConfig";
+import { abort } from "process";
 
 export class TodoList {
 
@@ -41,7 +42,8 @@ export class TodoList {
                 let data = doc.data();
                 var source = doc.metadata.hasPendingWrites ? "local" : "server";
                 if (change.type === "added") {
-                    let todoItem = new TodoItem(doc.id, this.id, data.category, data.title, data.description, data.completed, data.archived);
+                    let timestamp = data.created?.seconds || Math.floor((Date.now() / 1000));
+                    let todoItem = new TodoItem(doc.id, this.id, data.category, timestamp, data.title, data.description, data.completed, data.archived);
                     this.addTodoItem(todoItem);
                 } else if (change.type === "modified" && source === "server") {
                     this.updateTodoItem(doc.id, data.title, data.description, data.completed, data.archived);
@@ -69,6 +71,15 @@ export class TodoList {
     // Used to add a TodoList to the TodoList
     addTodoItem(todoItem: TodoItem) {
         this.todoItems = [todoItem, ...this.todoItems];
+        this.todoItems.sort((a: TodoItem, b: TodoItem) => {
+            if (a.created < b.created) {
+                return 1;
+            }
+            if (a.created > b.created) {
+                return -1;
+            }
+            return 0;
+        });
     }
 
     private updateTodoItem(id: string, title: string, description: string, completed: boolean, archived: boolean) {
