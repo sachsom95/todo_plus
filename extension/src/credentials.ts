@@ -18,7 +18,7 @@ export class Credentials {
 		 * An entry for the sample extension will be added under the menu to sign in. This allows quietly 
 		 * prompting the user to sign in.
 		 * */
-        try{
+        try {
             const session = await vscode.authentication.getSession(GITHUB_AUTH_PROVIDER_ID, SCOPES, { createIfNone: false });
 
             if (session) {
@@ -31,8 +31,8 @@ export class Credentials {
 
             this.octokit = undefined;
 
-        }catch(e){
-            console.log("eror is", e)
+        }catch(e) {
+            console.log("error is", e)
         }
 		
 	}
@@ -49,19 +49,24 @@ export class Credentials {
 	}
 
 	async getOctokit(): Promise<Octokit.Octokit> {
-		if (this.octokit) {
+		try {
+			if (this.octokit) {
+				return this.octokit;
+			}
+	
+			/**
+			 * When the `createIfNone` flag is passed, a modal dialog will be shown asking the user to sign in.
+			 * Note that this can throw if the user clicks cancel.
+			 */
+			const session = await vscode.authentication.getSession(GITHUB_AUTH_PROVIDER_ID, SCOPES, { createIfNone: true });
+			this.octokit = new Octokit.Octokit({
+				auth: session.accessToken
+			});
+	
 			return this.octokit;
+		}catch(e) {
+			console.log("error is", e)
 		}
-
-		/**
-		 * When the `createIfNone` flag is passed, a modal dialog will be shown asking the user to sign in.
-		 * Note that this can throw if the user clicks cancel.
-		 */
-		const session = await vscode.authentication.getSession(GITHUB_AUTH_PROVIDER_ID, SCOPES, { createIfNone: true });
-		this.octokit = new Octokit.Octokit({
-			auth: session.accessToken
-		});
-
-		return this.octokit;
+		
 	}
 }

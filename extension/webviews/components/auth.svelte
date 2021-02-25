@@ -10,7 +10,7 @@
             switch (message.type) {
                 case 'auth-status':
                     authStatus = message.value
-                    if(authStatus=='authenticated'){
+                    if(authStatus=='authenticated') {
                         dispatch("page_data_receive", { page: "todoListJoinOptions", auth:true });
                     }
             }
