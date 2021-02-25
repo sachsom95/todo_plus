@@ -5,13 +5,23 @@
     import Auth from "./auth.svelte";
     import NotImplemented from "./notImplemented.svelte";
 
-    let currentPage: string = "auth";
+    let currentPage:
+        | "auth"
+        | "initial"
+        | "todoList"
+        | "joinTodoListInvite"
+        | "todoListJoinOptions"
+        | "notImplemented" = tsvscode.getState()?.currentPage || "auth";
+    $: {
+        tsvscode.setState({ currentPage });
+    }
     let code: string;
     let auth:string;
-    // This even listner will update the currentPage based on changes from component button press
-    const updatePage = (event : any) => {
-        currentPage = event.detail.page;
 
+    console.log("currentpage",currentPage)
+    // This even listner will update the currentPage based on changes from component button press
+    const updatePage = (event: any) => {
+        currentPage = event.detail.page;
         if (event?.detail?.code !== undefined) {
             code = event.detail.code;
         }
@@ -21,7 +31,7 @@
     };
 </script>
 
-{#if currentPage === "auth" || currentPage === "initial"}
+{#if currentPage === "auth" }
 <Auth on:page_data_receive={updatePage}/>
 
 {:else if currentPage === "todoListJoinOptions"}
@@ -40,8 +50,6 @@
 <p>Error 404</p>
 
 {/if}
-
-
 
 
 <!-- {#if currentPage == "Auth"}

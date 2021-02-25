@@ -6,7 +6,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
   _doc?: vscode.TextDocument;
 
-  constructor(private readonly _extensionUri: vscode.Uri) {}
+  constructor(private readonly _extensionUri: vscode.Uri) { }
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     this._view = webviewView;
@@ -23,6 +23,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
         case 'authenticate': {
+          console.log("inside auth")
           var result: any = await vscode.commands.executeCommand("todo-plus-plus.authenticate");
           if(!result) {
             webviewView.webview.postMessage({type:"auth-status",value:'authenticated'})
@@ -100,7 +101,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       <body>
 				<script nonce="${nonce}" src="${scriptUri}"></script>
         <script nonce=${nonce}>
-          const tsvscode = acquireVsCodeApi();
+            const tsvscode = acquireVsCodeApi();
         </script>
       </body>
 			</html>`;
