@@ -67,13 +67,10 @@
     {#if todoList === undefined}
         <h2>Loading...</h2>
     {:else}
-
+        <div on:click={todoListJoinOptions} class="icon back-button"><i class="codicon codicon-arrow-left"/></div>
         {#if enableTodoListTitleEdit === false}
             <h2>{todoList.name}</h2>
             <div on:click={() => enableTodoListTitleEdit = true} class="icon"><i class="codicon codicon-edit" /></div>
-            <div on:click={todoListJoinOptions} class="icon">
-                <i class="codicon codicon-arrow-left icon-align-fix," />
-            </div>
         {:else}
             <input bind:value={todoListTitleEditText}>
             <div on:click={(updateTodoListName)} class="icon"><i class="codicon codicon-check" /></div>
@@ -185,6 +182,11 @@
 </div>
 
 <style>
+
+    .back-button {
+        margin-right: 10px;
+    }
+
     .btn {
         padding-bottom: 10px;
         padding-top: 10px;
