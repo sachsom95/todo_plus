@@ -12,10 +12,16 @@
         | "joinTodoListInvite"
         | "todoListJoinOptions"
         | "notImplemented" = tsvscode.getState()?.currentPage || "auth";
-    $: {
-        tsvscode.setState({ currentPage });
-    }
-    let code: string;
+        let code: string = tsvscode.getState()?.code || undefined;
+    // $: {
+    //     // tsvscode.setState({ currentPage ,code});
+    //     tsvscode.setState({code});
+    //     console.log(`Runn`)
+    //     console.log(currentPage)
+
+    //     console.log(`code->${code}`)
+    //     // tsvscode.setState({ code });
+    // }
     // This even listner will update the currentPage based on changes from component button press
     const updatePage = (event: any) => {
         currentPage = event.detail.page;
@@ -23,6 +29,17 @@
             code = event.detail.code;
         }
     };
+
+    $: {
+        // tsvscode.setState({ currentPage ,code});
+        console.log(`todoList Console`)
+        console.log(`code updated->${code}`)
+        tsvscode.setState({code})
+        // tsvscode.setState({ code });
+    }
+
+
+
 </script>
 
 {#if currentPage === "auth" || currentPage === "initial"}
