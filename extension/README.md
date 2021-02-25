@@ -46,8 +46,6 @@ In development mode, extension may not load when first activated, the sidebar ic
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
 ### 1.0.0
 
 Initial release of Todo++
