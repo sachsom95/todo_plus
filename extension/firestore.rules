@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /TodoList/{TodoListId} {
+
+      function validTodoListStructure() {
+        return
+          request.resource.data.keys().hasAll(['created', 'name']) &&
+          request.resource.data.created is timestamp &&
+          request.resource.data.name is string;
+      }
+
+      allow create, update: if validTodoListStructure();
+      allow get;
+      allow list: if false;
+      allow delete: if false;
+
+      match /TodoItem/{TodoItemId} {
+
+        function validTodoItemStructure() {
+          return 
+            request.resource.data.keys().hasAll(['archived', 'category', 'completed', 'created', 'description', 'title']) &&
+            request.resource.data.archived is bool &&
+            request.resource.data.category is string &&
+            request.resource.data.completed is bool &&
+            request.resource.data.created is timestamp &&
+            request.resource.data.description is string &&
+            request.resource.data.title is string;             
+        }
+        allow delete;
+        allow read;
+        allow create, update: if validTodoItemStructure();
+      }
+    }
+
+  }
+}
