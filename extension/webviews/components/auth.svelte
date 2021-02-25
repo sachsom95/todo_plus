@@ -9,12 +9,9 @@
 
             switch (message.type) {
                 case 'auth-status':
-                    console.log("changinggg")
                     authStatus = message.value
                     if(authStatus=='authenticated'){
                         dispatch("page_data_receive", { page: "todoListJoinOptions", auth:true });
-                    }else{
-                        dispatch("page_data_receive", { page: "todoListJoinOptions", auth:false });
                     }
             }
         });

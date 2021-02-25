@@ -23,19 +23,22 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
         case 'authenticate':{
-          var result=await vscode.commands.executeCommand("todo-plus-plus.authenticate");
+          var result:any=await vscode.commands.executeCommand("todo-plus-plus.authenticate");
           if(!result){
             webviewView.webview.postMessage({type:"auth-status",value:'authenticated'})
           }else{
+            vscode.window.showErrorMessage(result.message);
             webviewView.webview.postMessage({type:"auth-status",value:'unauthenticated'})
           }
           break;
         }
         case 'create-issue':{
           vscode.commands.executeCommand("todo-plus-plus.createIssue",data.value.title,data.value.description);
+          break;
         }
         case 'auth-status':{
           webviewView.webview.postMessage({type:"auth-status",value:'authenticated'})
+          break;
         }
         case "onInfo": {
           if (!data.value) {

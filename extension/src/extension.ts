@@ -11,7 +11,6 @@ export async function  activate(context: vscode.ExtensionContext) {
 	const sidebarProvider = new SidebarProvider(context.extensionUri);
 	const credentials = new Credentials();
 	await credentials.initialize(context);
-	const octokit = await credentials.getOctokit();
 	context.subscriptions.push(
 		vscode.window.registerWebviewViewProvider(
 		"todo-plus-plus-sidebar",
@@ -22,11 +21,11 @@ export async function  activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.commands.registerCommand('todo-plus-plus.authenticate', async () => {
 			try{
+				const octokit = await credentials.getOctokit();
 				const userInfo = await octokit.users.getAuthenticated();
 				vscode.window.showInformationMessage(`Logged into GitHub as ${userInfo.data.login}`);
 			}catch(e){
-				vscode.window.showErrorMessage(e.message);
-				return e.message;
+				return e;
 			}
 		})
 	);
@@ -49,6 +48,7 @@ export async function  activate(context: vscode.ExtensionContext) {
 						if(urlArray[2]!='github.com'){
 							vscode.window.showErrorMessage(`This extension only supports pushing issues to Github`)
 						}else{
+							const octokit = await credentials.getOctokit();
 							await octokit.request(`POST /repos/${owner}/${repo}/issues`, {
 								owner,
 								repo,
