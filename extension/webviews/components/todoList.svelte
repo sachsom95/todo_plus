@@ -2,8 +2,9 @@
     This component is the actual todoList
  -->
 <script lang="ts">
-    import TodoCode from "./todoCode.svelte";
 
+    import { createEventDispatcher } from "svelte";
+    import TodoCode from "./todoCode.svelte";
     import { TodoList } from "../../src/entities/TodoList";
     import { TodoItem } from "../../src/entities/TodoItem";
 
@@ -52,6 +53,11 @@
         loading = false;
     }
 
+    const dispatch = createEventDispatcher();
+    function todoListJoinOptions() {
+        dispatch("page_data_receive", { page: "todoListJoinOptions" });
+    }
+
     // code for categories
     // let selectedCategory='Select Category'
     // let categories=['category1','category2','category3']
@@ -65,6 +71,9 @@
         {#if enableTodoListTitleEdit === false}
             <h2>{todoList.name}</h2>
             <div on:click={() => enableTodoListTitleEdit = true} class="icon"><i class="codicon codicon-edit" /></div>
+            <div on:click={todoListJoinOptions} class="icon">
+                <i class="codicon codicon-arrow-left icon-align-fix," />
+            </div>
         {:else}
             <input bind:value={todoListTitleEditText}>
             <div on:click={(updateTodoListName)} class="icon"><i class="codicon codicon-check" /></div>
