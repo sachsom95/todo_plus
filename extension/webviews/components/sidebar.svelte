@@ -35,8 +35,10 @@
 {:else if currentPage === "notImplemented"}
     <NotImplemented on:page_data_receive={updatePage} />
 {:else}
-    <p>Error 404</p>
+<p>Error 404</p>
+
 {/if}
+
 
 <!-- {#if currentPage == "Auth"}
     <button

@@ -1,8 +1,11 @@
+<!-- 
+    This component is the actual todoList
+ -->
 <script lang="ts">
-    import TodoCode from './todoCode.svelte';
+    import TodoCode from "./todoCode.svelte";
 
-    import { TodoList } from '../../src/entities/TodoList'
-    import { TodoItem } from '../../src/entities/TodoItem'    
+    import { TodoList } from "../../src/entities/TodoList";
+    import { TodoItem } from "../../src/entities/TodoItem";
 
     export let code: string;
 
@@ -11,40 +14,42 @@
     let makeTodoVisiblity = true;
     let description = "";
 
-    let todoList : TodoList;
+    let todoList: TodoList;
 
-    ( async () => {
+    (async () => {
         if (code !== undefined) {
             todoList = await TodoList.fetch(code);
         } else {
             todoList = await TodoList.create("My First TodoList!");
         }
+
         todoList.updateCallback = () => {
             todoList = todoList;
         };
         loading = false; 
+
     })();
 
-    async function addTodo(title: string, description: string) : Promise<void> {
+    async function addTodo(title: string, description: string): Promise<void> {
         loading = true;
         await TodoItem.create(todoList.id, title, description);
         loading = false;
     }
 
-    async function deleteTodo(todoItem: TodoItem) : Promise<void> {
+    async function deleteTodo(todoItem: TodoItem): Promise<void> {
         loading = true;
         await todoList.removeTodoItem(todoItem);
         loading = false;
     }
-    
+
     // code for categories
     // let selectedCategory='Select Category'
     // let categories=['category1','category2','category3']
 </script>
 
-<h2 class="title">{todoList === undefined ? 'Loading...' : todoList.name}</h2>
+<h2 class="title">{todoList === undefined ? "Loading..." : todoList.name}</h2>
 
-<TodoCode code={todoList ? todoList.id : ""}/>
+<TodoCode code={todoList ? todoList.id : ""} />
 
 <div
     class="maketodo-toggle"
@@ -85,7 +90,7 @@
         </select> -->
 
         <br />
-        <button type="submit">Add Todo</button>
+        <button class="btn" type="submit">Add Todo</button>
     </form>
     <br />
 {/if}
@@ -93,45 +98,67 @@
 <hr />
 
 <p>View Todos</p>
-<ul class="todolist">
-    
-    <p class:hidden={!loading} class="transition">Loading...</p>
+<div class="todo_container">
+    <ul class="todolist">
+        <p class:hidden={!loading} class="transition">Loading...</p>
 
-    {#if todoList !== undefined}
-        {#each todoList.todoItems as todoItem (todoItem.id)}
-            <li class:completed={todoItem.completed} class="todoitem transition" >
-                <input class="todocheckbox" type="checkbox" checked={todoItem.completed} on:click={() => {
-                    todoItem.completed = !todoItem.completed;
-                }}
-                />
-                <div class="todo-text">
-                    <h4>{todoItem.title}</h4>
-                    <p class="description">{todoItem.description}</p>
-                    <div class="interaction-buttons">
-                        <div class="icon-text">
-                            <div class="icon">
-                                <i class="codicon codicon-issues icon-align-fix" />
+        {#if todoList !== undefined}
+            {#each todoList.todoItems as todoItem (todoItem.id)}
+                <li
+                    class:completed={todoItem.completed}
+                    class="todoitem transition"
+                >
+                    <input
+                        class="todocheckbox"
+                        type="checkbox"
+                        checked={todoItem.completed}
+                        on:click={() => {
+                            todoItem.completed = !todoItem.completed;
+                        }}
+                    />
+                    <div class="todo-text">
+                        <h4>{todoItem.title}</h4>
+                        <p class="description">{todoItem.description}</p>
+                        <div class="interaction-buttons">
+                            <div class="icon-text">
+                                <div class="icon">
+                                    <i
+                                        class="codicon codicon-issues icon-align-fix"
+                                    />
+                                </div>
+                                <p>Push as an issue</p>
                             </div>
-                            <p>Push as an issue</p>
-                        </div>
-                        <div class="icon-text" on:click={deleteTodo(todoItem)}>
-                            <div class="icon">
-                                <i class="codicon codicon-trash icon-align-fix" />
+                            <div
+                                class="icon-text"
+                                on:click={deleteTodo(todoItem)}
+                            >
+                                <div class="icon">
+                                    <i
+                                        class="codicon codicon-trash icon-align-fix"
+                                    />
+                                </div>
+                                <p>Delete</p>
                             </div>
-                            <p>Delete</p>
                         </div>
                     </div>
-                </div>
-            </li>
-        {:else}
-            <p>Nothing seems to be here!</p>
-        {/each}
-
-    {/if}
-</ul>
+                </li>
+            {:else}
+                <p>Add your first todo!</p>
+            {/each}
+        {/if}
+    </ul>
+</div>
 
 <style>
-
+    .btn {
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+    .todo_container {
+        overflow-y: auto;
+        max-height: 600px;
+    }
+    
     .title {
         margin-bottom: 15px;
     }
