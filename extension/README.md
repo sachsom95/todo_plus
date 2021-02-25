@@ -15,7 +15,14 @@ If the user is signed in with github, user can create an issue of a todo item by
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+[yarn](https://classic.yarnpkg.com/en/docs/install) \
+Yarn should be installed on your machine to run the extension 
+
+<br />
+
+[firebase account](https://firebase.google.com) \
+User should create a firebase account and a firebase project to get api keys and other configuation details
+
 
 ## Extension Settings
 
@@ -25,7 +32,8 @@ No additional settings are required for this extension.
 
 - Clone the repository
 - cd into extension folder
-- run the following commands on the terminal
+- Add a typescript file api.ts in src folder. api.ts should contain all the details for firebase config as mentioned in api.ts.example in the src folder
+- Run the following commands on the terminal
 ```
 yarn install
 yarn watch
@@ -36,7 +44,7 @@ yarn watch
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+In development mode, extension may not load when first activated, the sidebar icon needs to be clicked again to active the extension.
 
 ## Release Notes
 
