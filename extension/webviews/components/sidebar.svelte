@@ -10,6 +10,7 @@
         | "initial"
         | "todoList"
         | "joinTodoListInvite"
+        | "todoListJoinOptions"
         | "notImplemented" = tsvscode.getState()?.currentPage || "auth";
     $: {
         tsvscode.setState({ currentPage });
