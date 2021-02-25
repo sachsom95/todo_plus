@@ -14,7 +14,17 @@
     function joinTodoList() {
         dispatch("page_data_receive", { page: "joinTodoListInvite",auth });
     }
+
+    function back(){
+        dispatch("page_data_receive", { page: "auth",auth });
+    }
 </script>
+
+<button  on:click={()=>back()} type="submit">
+    <div class="icon">
+        <i class="codicon codicon-arrow-left icon-align-fix," />
+    </div>
+</button>
 
 <p class="p_heading">Create new collaborative todo list<br /></p>
 <p class="p_content">

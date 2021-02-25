@@ -51,7 +51,7 @@
     const dispatch = createEventDispatcher();
 
     function todoListJoinOptions() {
-        dispatch("page_data_receive", { page: "todoListJoinOptions" });
+        dispatch("page_data_receive", { page: "todoListJoinOptions",auth });
     }
     
     // code for categories
