@@ -99,10 +99,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         <link href="${codiconsUri}" rel="stylesheet">
 			</head>
       <body>
-				<script nonce="${nonce}" src="${scriptUri}"></script>
-        <script nonce=${nonce}>
+      <script nonce="${nonce}">
             const tsvscode = acquireVsCodeApi();
         </script>
+				<script nonce="${nonce}" src="${scriptUri}"></script>
+        
       </body>
 			</html>`;
   }

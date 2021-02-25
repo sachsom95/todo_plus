@@ -2,6 +2,8 @@
     This component is the actual todoList
  -->
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
+
     import TodoCode from "./todoCode.svelte";
 
     import { TodoList } from "../../src/entities/TodoList";
@@ -46,6 +48,11 @@
     async function createIssue(title:string,description:string) {
         await tsvscode.postMessage({type:"create-issue",value:{title,description}})
     }
+    const dispatch = createEventDispatcher();
+
+    function todoListJoinOptions() {
+        dispatch("page_data_receive", { page: "todoListJoinOptions" });
+    }
     
     // code for categories
     // let selectedCategory='Select Category'
@@ -53,7 +60,11 @@
 </script>
 
 <h2 class="title">{todoList === undefined ? "Loading..." : todoList.name}</h2>
-
+<button  on:click={todoListJoinOptions} type="submit">
+    <div class="icon">
+        <i class="codicon codicon-arrow-left icon-align-fix," />
+    </div>
+</button>
 <TodoCode code={todoList ? todoList.id : ""} />
 
 <div
