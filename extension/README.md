@@ -15,12 +15,10 @@ If the user is signed in with github, user can create an issue of a todo item by
 
 ## Requirements
 
-[yarn](https://classic.yarnpkg.com/en/docs/install) \
+1. [yarn](https://classic.yarnpkg.com/en/docs/install) \
 Yarn should be installed on your machine to run the extension 
 
-<br />
-
-[firebase account](https://firebase.google.com) \
+2. [Firebase account](https://firebase.google.com) \
 User should create a firebase account and a firebase project to get api keys and other configuation details
 
 
@@ -38,7 +36,7 @@ No additional settings are required for this extension.
 yarn install
 yarn watch
 ```
-- Go to extension.ts file in the src folder and run the extension. (Shortcut: Fn+f5)
+- Go to extension.ts file in the src folder and run the extension. (Shortcut: F5/Fn+F5)
 - Select VS Code Extension Development from the list
 - A new vs code window will open up to test the extension
 
