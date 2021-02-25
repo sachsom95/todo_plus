@@ -17,7 +17,7 @@ export class TodoItem {
     static readonly COLLECTION_NAME: string = TodoItem.name;
 
     readonly id: string;
-    readonly todoList: TodoList;
+    readonly todoListId: string;
 
     // For now this value is not changeable
     readonly category: string;
@@ -31,22 +31,22 @@ export class TodoItem {
     #archived: boolean;
 
     // Create a local copy of the TodoItem
-    private constructor(id: string, category: string, todoList: TodoList, title: string, description: string, completed: boolean, archived: boolean) {
+    constructor(id: string, todoListId: string, category: string, title: string, description: string, completed: boolean, archived: boolean) {
         this.id = id;
         this.category = category;
-        this.todoList = todoList;
-
+        this.todoListId = todoListId;
         this.#title = title;
         this.#description = description;
         this.#completed = completed;
         this.#archived = archived;
-
-        // The local TodoList instance holds a reference to all TodoItems for easier access.
-        todoList.addTodoItem(this);
     }
 
-    get todoListId() : string {
-        return this.todoList.id;
+    // Used to update the objects values locally
+    update(title: string, description: string, completed: boolean, archived: boolean) {
+        this.#title = title;
+        this.#description = description;
+        this.#completed = completed;
+        this.#archived = archived;
     }
 
      // Used to update the document with an arbitrary set of atributes from the ITodoItem interface.
@@ -59,33 +59,13 @@ export class TodoItem {
         await docRef.update(value);
     }
 
-
-    // Used to delete the TodoItem.
-    // Optimistic, if the delete fails the document is readded.
-    async delete() : Promise<void> {
-        // Remove the TodoItem from the TodoList
-        this.todoList.removeTodoItem(this);
-
-        // Reference pointing to this instance's Firestore document.
-        const docRef = db.collection(TodoList.COLLECTION_NAME).doc(this.todoListId).collection(TodoItem.COLLECTION_NAME).doc(this.id);
-
-        // Delete the TodoItem from Firebase
-        await docRef.delete()
-        .catch( (error) => {
-            console.error("Error deleting document: " + error);
-
-            // In case of error, readd it locally
-            this.todoList.addTodoItem(this);
-        });
-    }
-
     // Creates the TodoItem in Firestore and creates a local copy
-    static async create(title: string, description: string, todoList: TodoList, category: string = 'Default') {
+    static async create(todoListId: string, title: string, description: string, category: string = 'Default') {
 
         // Reference pointing to the collection of TodoItems where a TodoItem is stored in Firestore.
-        const colRef = db.collection(TodoList.COLLECTION_NAME).doc(todoList.id).collection(TodoItem.COLLECTION_NAME);
+        const colRef = db.collection(TodoList.COLLECTION_NAME).doc(todoListId).collection(TodoItem.COLLECTION_NAME);
         // Reference pointing to the newly created object.
-        const docRef = await colRef.add( {
+        await colRef.add( {
             category: category,
             title: title,
             description: description,
@@ -93,30 +73,6 @@ export class TodoItem {
             archived: false,
             created: firebase.firestore.FieldValue.serverTimestamp()
         });
-
-        // Creates a local copy of the TodoItem
-        return new TodoItem(docRef.id, category, todoList, title, description, false, false);
-    }
-
-    // Fetches all TodoItems belonging to a certain todo list and creates a local copy
-    static async fetch(todoList: TodoList) : Promise<Array<TodoItem>> {
-
-        // Corresponds to the array of TodoItems which will be returned
-        const todoItems : Array<TodoItem> = [];
-
-        // Corresponds to the Firestore path which holds all todoItems belonging to the given todoList: TodoList
-        const todoItemsRef = db.collection(TodoList.COLLECTION_NAME).doc(todoList.id).collection(TodoItem.COLLECTION_NAME);
-
-        // Sends the get request for the TodoItems from Firestore and awaits for the response
-        const todoItemsQuerySnapshot = await todoItemsRef.get();
-
-        todoItemsQuerySnapshot.forEach( (doc) => {
-            const data = doc.data();
-            const todoItem = new TodoItem(doc.id, data.category, todoList, data.title, data.description, data.completed, data.archived);
-            todoItems.push(todoItem);
-        });
-
-        return todoItems;    
     }
 
     // Getters and Setters
