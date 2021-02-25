@@ -31,10 +31,12 @@
     };
 
     $: {
-        // tsvscode.setState({ currentPage ,code});
+        tsvscode.setState({code,currentPage})
+
+        // tsvscode.setState({ currentPage });
+
         console.log(`todoList Console`)
-        console.log(`code updated->${code}`)
-        tsvscode.setState({code})
+        console.log(`code updated->${code} and page->${currentPage}`)
         // tsvscode.setState({ code });
     }
 
