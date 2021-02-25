@@ -21,6 +21,9 @@
 
     let todoList: TodoList;
 
+    let enableTodoListTitleEdit = false;
+    let todoListTitleEditText = "";
+
     (async () => {
         if (code !== undefined) {
             try {
@@ -37,8 +40,8 @@
         todoList.updateCallback = () => {
             todoList = todoList;
         };
-        loading = false; 
-
+        todoListTitleEditText = todoList.name;
+        loading = false;
     })();
 
     async function addTodo(title: string, description: string): Promise<void> {
@@ -56,6 +59,13 @@
     function back() {
         dispatch("page_data_receive", { page: "joinTodoListInvite" });
     }
+    
+    async function updateTodoListName() : Promise<void> {
+        loading = true;
+        todoList.name = todoListTitleEditText;
+        enableTodoListTitleEdit = false;
+        loading = false;
+    }
 
     // code for categories
     // let selectedCategory='Select Category'
@@ -68,7 +78,17 @@
     <input class="form_input" disabled bind:value={code}>
     <button class="btn" on:click={back}>Try another code</button>
 {:else}
-    <h2 class="title">{todoList === undefined ? "Loading..." : todoList.name}</h2>
+    <div class="title">
+        {#if todoList === undefined}
+            <h2>Loading...</h2>
+        {:else if enableTodoListTitleEdit === false}
+            <h2>{todoList.name}</h2>
+            <div on:click={() => enableTodoListTitleEdit = true} class="icon"><i class="codicon codicon-edit" /></div>
+        {:else}
+            <input bind:value={todoListTitleEditText}>
+            <div on:click={(updateTodoListName)} class="icon"><i class="codicon codicon-check" /></div>
+        {/if}
+    </div>
 
     <TodoCode code={todoList ? todoList.id : ""} />
 
@@ -76,8 +96,7 @@
         class="maketodo-toggle"
         on:click={() => {
             makeTodoVisiblity = !makeTodoVisiblity;
-        }}
-    >
+        }}>
         <p>Make Todos</p>
         {#if makeTodoVisiblity}
             <div class="icon"><i class="codicon codicon-chevron-up" /></div>
@@ -92,13 +111,12 @@
                 addTodo(title, description);
                 title = "";
                 description = "";
-            }}
-        >
+            }}>
             <p>Todo</p>
             <input bind:value={title} />
             <p>Description</p>
             <textarea bind:value={description} />
-
+    
             <!-- Code for categories -->
             <!-- <label>Category:</label>
             <br/>
@@ -127,8 +145,7 @@
                 {#each todoList.todoItems as todoItem (todoItem.id)}
                     <li
                         class:completed={todoItem.completed}
-                        class="todoitem transition"
-                    >
+                        class="todoitem transition">
                         <input
                             class="todocheckbox"
                             type="checkbox"
@@ -142,23 +159,13 @@
                             <p class="description">{todoItem.description}</p>
                             <div class="interaction-buttons">
                                 <div class="icon-text">
-                                    <div class="icon">
-                                        <i
-                                            class="codicon codicon-issues icon-align-fix"
-                                        />
-                                    </div>
+                                    <div class="icon"><i class="codicon codicon-issues icon-align-fix"/></div>
                                     <p>Push as an issue</p>
                                 </div>
                                 <div
                                     class="icon-text"
-                                    on:click={deleteTodo(todoItem)}
-                                >
-                                    <div class="icon">
-                                        <i
-                                            class="codicon codicon-trash icon-align-fix"
-                                        />
-                                    </div>
-                                    <p>Delete</p>
+                                    on:click={() => deleteTodo(todoItem)}>
+                                    <div class="icon"><i class="codicon codicon-trash icon-align-fix"/></div>
                                 </div>
                             </div>
                         </div>
@@ -170,8 +177,6 @@
         </ul>
     </div>
 {/if}
-
-
 
 <style>
 
@@ -196,7 +201,16 @@
     }
     
     .title {
+        display: flex;
+        align-items: center;
         margin-bottom: 15px;
+    }
+
+    .title i {
+        position: relative;
+        top: 3px;
+        margin-left: 5px;
+        cursor: pointer;
     }
 
     .hidden {
