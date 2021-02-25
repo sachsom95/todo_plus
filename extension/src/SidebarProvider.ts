@@ -6,7 +6,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
   _doc?: vscode.TextDocument;
 
-  constructor(private readonly _extensionUri: vscode.Uri) {}
+  constructor(private readonly _extensionUri: vscode.Uri) { }
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     this._view = webviewView;
@@ -71,6 +71,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 				<!--
 					Use a content security policy to only allow loading images from https or from our extension directory,
 					and only allow scripts that have a specific nonce.
+          The acquireVsCodeApi() script allows communication from vscode and svelte
         -->
         <meta http-equiv="Content-Security-Policy" content="img-src https: data: ; style-src 'unsafe-inline' ${webview.cspSource}; script-src 'nonce-${nonce}';">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -78,7 +79,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 				<link href="${styleVSCodeUri}" rel="stylesheet">
         <link href="${styleMainUri}" rel="stylesheet">
         <link href="${codiconsUri}" rel="stylesheet">
+
+
 			</head>
+      <script nonce="${nonce}">
+      const tsvscode = acquireVsCodeApi();
+      </script>
       <body>
 				<script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>
