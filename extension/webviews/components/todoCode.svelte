@@ -16,11 +16,11 @@
 </script>
 
 <div class="container_share" >
-  <p class="p_heading">Enable access to the TodoList with access code</p>
+  <p class="p_heading">Share your todolist with the code below</p>
   <button class="btn" on:click={copy}>
     <div class="flex_box">
-      <p >{code || "Loading..."}</p>
-      <p >{copied ? "|copied" : "|copy"}</p>
+      <p>{code || "Loading..."}</p>
+      <p>{copied ? "copied" : "copy"}</p>
     </div>
     
   </button>
@@ -29,25 +29,25 @@
 </div>
 
 <style>
-    .p_heading {
-        font-size: var(--vscode-font-size);
-        font-weight: bold;
-        font-family: var(--vscode-font-family);
-        padding-top: 5px;
-        padding-bottom: 5px;
-    }
+  .p_heading {
+    font-size: var(--vscode-font-size);
+    font-family: var(--vscode-font-family);
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
   .flex_box {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-    }
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
 
   .btn {
     padding-bottom: 10px;
     padding-top: 10px;
     text-align: justify;
   }
- 
+
   .container_share {
     display: flex;
     flex-direction: column;
@@ -59,7 +59,6 @@
     font-family: monospace;
     transition: all 0.1s ease-in-out;
     font-size: small;
-    margin-bottom: 5px;
   }
 
   .flex_box:active {
@@ -73,13 +72,11 @@
     0% {
       -webkit-transform: scale(1);
       transform: scale(1);
-
     }
 
     50% {
       -webkit-transform: scale(0.9);
       transform: scale(0.9);
-
     }
 
     100% {
@@ -90,9 +87,9 @@
 
   @keyframes breathing {
     0% {
-      -webkit-transform: scale(1);
-      -ms-transform: scale(1);
-      transform: scale(1);
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
     }
 
     50% {
