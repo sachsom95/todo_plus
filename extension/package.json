@@ -10,7 +10,6 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:todo-plus-plus.helloWorld",
 		"onView:todo-plus-plus-sidebar",
 		"onCommand:todo-plus-plus.createIssue",
 		"onCommand:todo-plus-plus.authenticate"	
@@ -38,11 +37,6 @@
 			]
 		},
 		"commands": [
-			{
-				"command": "todo-plus-plus.helloWorld",
-				"title": "Hello World",
-				"category": "Todo++"
-			},
 			{
 				"command": "todo-plus-plus.createIssue",
 				"title": "Create an Issue",
