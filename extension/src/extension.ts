@@ -36,17 +36,17 @@ export async function  activate(context: vscode.ExtensionContext) {
 				const gitExtension : any | undefined= vscode.extensions.getExtension<GitExtension>('vscode.git')!.exports;
 				if(gitExtension) {
 					const git = await gitExtension.getAPI(1);
-					if(git._model.repositories.length==0) {
-						vscode.window.showErrorMessage(`No Github Repository opened, open the workspace in VS Code to push as issue`)
-					} else if(git._model.repositories.length>1) {
-						vscode.window.showErrorMessage(`Multiple folders with source control, open the correct workspace in VS Code to push as issue`)
+					if (git._model.repositories.length === 0) {
+						vscode.window.showErrorMessage(`No Github Repository opened, open the workspace in VS Code to push as issue`);
+					} else if (git._model.repositories.length > 1) {
+						vscode.window.showErrorMessage(`Multiple folders with source control, open the correct workspace in VS Code to push as issue`);
 					} else {
 						var fetchUrl=git._model.repositories[0]._remotes[0].fetchUrl;
-						var urlArray=fetchUrl.split('/')
+						var urlArray=fetchUrl.split('/');
 						var owner=urlArray[3];
 						var repo=urlArray[4].split('.')[0];
-						if(urlArray[2]!='github.com') {
-							vscode.window.showErrorMessage(`This extension only supports pushing issues to Github`)
+						if (urlArray[2] !== 'github.com') {
+							vscode.window.showErrorMessage(`This extension only supports pushing issues to Github`);
 						} else {
 							const octokit = await credentials.getOctokit();
 							await octokit.request(`POST /repos/${owner}/${repo}/issues`, {
@@ -54,8 +54,8 @@ export async function  activate(context: vscode.ExtensionContext) {
 								repo,
 								title: title,
 								body: description
-							})
-							vscode.window.showInformationMessage(`Issue created in ${fetchUrl}`)
+							});
+							vscode.window.showInformationMessage(`Issue created in ${fetchUrl}`);
 						}
 					}
 				}

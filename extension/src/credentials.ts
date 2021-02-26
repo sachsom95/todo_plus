@@ -31,8 +31,8 @@ export class Credentials {
 
             this.octokit = undefined;
 
-        }catch(e) {
-            console.log("error is", e)
+        } catch(e) {
+            console.error("setOctokit error:", e);
         }
 		
 	}
@@ -64,9 +64,9 @@ export class Credentials {
 			});
 	
 			return this.octokit;
-		}catch(e) {
-			console.log("error is", e)
-		}
+		} catch(e) {
+            console.error("setOctokit error:", e);
+        }
 		
 	}
 }

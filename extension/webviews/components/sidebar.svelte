@@ -12,16 +12,14 @@
         | "joinTodoListInvite"
         | "todoListJoinOptions"
         | "notImplemented" = tsvscode.getState()?.currentPage || "auth";
-    $: {
-        tsvscode.setState({ currentPage });
-    }
-    let code: string;
-    let auth:string;
 
-    console.log("currentpage",currentPage)
-    // This even listner will update the currentPage based on changes from component button press
-    const updatePage = (event: any) => {
-        currentPage = event.detail.page;
+    let auth: string;
+    let code: string = tsvscode.getState()?.code || "";
+
+    const updateData = (event: any) => {
+        if (event?.detail?.page !== undefined) {
+            currentPage = event.detail.page;
+        }
         if (event?.detail?.code !== undefined) {
             code = event.detail.code;
         }
@@ -29,45 +27,28 @@
             auth = event.detail.auth;
         }
     };
+
+    $: {
+        tsvscode.setState({code,currentPage})
+    }
+
 </script>
 
 {#if currentPage === "auth" }
-<Auth on:page_data_receive={updatePage}/>
+    <Auth on:page_data_receive={updateData}/>
 
 {:else if currentPage === "todoListJoinOptions"}
-<TodoListJoinOptions auth={auth} on:page_data_receive={updatePage}/>
+    <TodoListJoinOptions auth={auth} on:page_data_receive={updateData}/>
 
 {:else if currentPage === "todoList"}
-<Todolist code={code} auth={auth} on:page_data_receive={updatePage}/>
+    <Todolist code={code} auth={auth} on:page_data_receive={updateData}/>
 
 {:else if currentPage === "joinTodoListInvite"}
-<JoinTodoListInvite auth={auth} on:page_data_receive={updatePage}/>
+    <JoinTodoListInvite auth={auth} on:page_data_receive={updateData}/>
 
 {:else if currentPage === "notImplemented"}
-<NotImplemented on:page_data_receive={updatePage}/>
-
+    <NotImplemented on:page_data_receive={updateData} />
 {:else}
 <p>Error 404</p>
 
 {/if}
-
-
-<!-- {#if currentPage == "Auth"}
-    <button
-        on:click={() => {
-            currentPage = "Todo";
-        }}>Change to todolist</button
-    >
-    <Auth />
-{:else if currentPage == "Todo"}
-    <button
-        on:click={() => {
-            currentPage = "Auth";
-        }}>Change to Auth</button
-    >
-    
-{:else if currentPage == "initial"}
-    <Initialize_join_component on:page_data_receive={updatePage} />
-{:else if currentPage == "invite"}
-    <Invite_component on:page_data_receive={updatePage} />
-{/if} -->

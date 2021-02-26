@@ -7,6 +7,7 @@ interface ITodoItem {
     title?: string;
     description?: string;
     category?: string;
+    created?: number;
     completed?: boolean;
     archived?: boolean;
 }
@@ -21,6 +22,7 @@ export class TodoItem {
 
     // For now this value is not changeable
     readonly category: string;
+    readonly created: number;
 
     // Properties appended with # are private
     // They can be read normally since a getter is defined below.
@@ -31,9 +33,10 @@ export class TodoItem {
     #archived: boolean;
 
     // Create a local copy of the TodoItem
-    constructor(id: string, todoListId: string, category: string, title: string, description: string, completed: boolean, archived: boolean) {
+    constructor(id: string, todoListId: string, category: string, created: number, title: string, description: string, completed: boolean, archived: boolean) {
         this.id = id;
         this.category = category;
+        this.created = created;
         this.todoListId = todoListId;
         this.#title = title;
         this.#description = description;

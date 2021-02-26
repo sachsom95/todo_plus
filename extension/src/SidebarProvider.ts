@@ -23,13 +23,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
         case 'authenticate': {
-          console.log("inside auth")
           var result: any = await vscode.commands.executeCommand("todo-plus-plus.authenticate");
-          if(!result) {
-            webviewView.webview.postMessage({type:"auth-status",value:'authenticated'})
-          }else {
+          if (!result) {
+            webviewView.webview.postMessage({type:"auth-status",value:'authenticated'});
+          } else {
             vscode.window.showErrorMessage(result.message);
-            webviewView.webview.postMessage({type:"auth-status",value:'unauthenticated'})
+            webviewView.webview.postMessage({type:"auth-status",value:'unauthenticated'});
           }
           break;
         }
@@ -38,7 +37,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           break;
         }
         case 'auth-status': {
-          webviewView.webview.postMessage({type:"auth-status",value:'authenticated'})
+          webviewView.webview.postMessage({type:"auth-status",value:'authenticated'});
           break;
         }
         case "onInfo": {
@@ -90,6 +89,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 				<!--
 					Use a content security policy to only allow loading images from https or from our extension directory,
 					and only allow scripts that have a specific nonce.
+          The acquireVsCodeApi() script allows communication from vscode and svelte
         -->
         <meta http-equiv="Content-Security-Policy" content="img-src https: data: ; style-src 'unsafe-inline' ${webview.cspSource}; script-src 'nonce-${nonce}';">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -97,13 +97,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 				<link href="${styleVSCodeUri}" rel="stylesheet">
         <link href="${styleMainUri}" rel="stylesheet">
         <link href="${codiconsUri}" rel="stylesheet">
+
+
 			</head>
+      <script nonce="${nonce}">const tsvscode = acquireVsCodeApi();</script>
       <body>
-      <script nonce="${nonce}">
-            const tsvscode = acquireVsCodeApi();
-        </script>
-				<script nonce="${nonce}" src="${scriptUri}"></script>
-        
+      <script nonce="${nonce}" src="${scriptUri}"></script>
       </body>
 			</html>`;
   }

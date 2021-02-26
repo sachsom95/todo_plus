@@ -6,7 +6,6 @@
     import { createEventDispatcher, onMount } from "svelte";
     const dispatch = createEventDispatcher();
     let authStatus='';
-    console.log("heloooo");
 
     onMount(async()=>{
         window.addEventListener('message', async (event) => {
@@ -15,7 +14,7 @@
             switch (message.type) {
                 case 'auth-status':
                     authStatus = message.value
-                    if(authStatus=='authenticated') {
+                    if (authStatus === 'authenticated') {
                         dispatch("page_data_receive", { page: "todoListJoinOptions", auth:true });
                     }
             }
@@ -23,7 +22,7 @@
     })
 
     async function loginGitHub() {
-        await tsvscode.postMessage({type:"authenticate",value:undefined});
+        tsvscode.postMessage({ type:"authenticate", value:undefined });
     }
 
     async function loginAnonymous() {

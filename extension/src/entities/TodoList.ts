@@ -2,6 +2,10 @@ import { TodoItem } from "./TodoItem";
 import firebase from "firebase/app";
 import { db } from "../firebaseConfig";
 
+interface ITodoList {
+    name?: string
+}
+
 export class TodoList {
 
     // Used for the Firestore collection name
@@ -41,7 +45,8 @@ export class TodoList {
                 let data = doc.data();
                 var source = doc.metadata.hasPendingWrites ? "local" : "server";
                 if (change.type === "added") {
-                    let todoItem = new TodoItem(doc.id, this.id, data.category, data.title, data.description, data.completed, data.archived);
+                    let timestamp = data.created?.seconds || Math.floor((Date.now() / 1000));
+                    let todoItem = new TodoItem(doc.id, this.id, data.category, timestamp, data.title, data.description, data.completed, data.archived);
                     this.addTodoItem(todoItem);
                 } else if (change.type === "modified" && source === "server") {
                     this.updateTodoItem(doc.id, data.title, data.description, data.completed, data.archived);
@@ -69,6 +74,15 @@ export class TodoList {
     // Used to add a TodoList to the TodoList
     addTodoItem(todoItem: TodoItem) {
         this.todoItems = [todoItem, ...this.todoItems];
+        this.todoItems.sort((a: TodoItem, b: TodoItem) => {
+            if (a.created < b.created) {
+                return 1;
+            }
+            if (a.created > b.created) {
+                return -1;
+            }
+            return 0;
+        });
     }
 
     private updateTodoItem(id: string, title: string, description: string, completed: boolean, archived: boolean) {
@@ -131,5 +145,23 @@ export class TodoList {
 
     get name() : string {
         return this.#name;
+    }
+
+    set name(name: string) {
+        const previous = this.#name;
+        this.#name = name;
+        this.updateValue({name: name}).catch( (error) => {
+            console.error("Error writing document: " + error);
+            this.#name = previous;
+        });
+    }
+
+    private async updateValue(value: ITodoList) : Promise<void> {
+
+        // Reference pointing to this instance's Firestore document.
+        const docRef = db.collection(TodoList.COLLECTION_NAME).doc(this.id);
+
+        // Update the value in Firestore
+        await docRef.update(value);
     }
 }

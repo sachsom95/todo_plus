@@ -2,15 +2,15 @@
     This component is the actual todoList
  -->
 <script lang="ts">
+
     import { createEventDispatcher } from "svelte";
-
     import TodoCode from "./todoCode.svelte";
-
     import { TodoList } from "../../src/entities/TodoList";
     import { TodoItem } from "../../src/entities/TodoItem";
 
-    export let code: string;
+    export let code: string = "";
     export let auth: string;
+    const dispatch = createEventDispatcher();
 
     let loading = true;
     let title = "";
@@ -19,18 +19,23 @@
 
     let todoList: TodoList;
 
+    let enableTodoListTitleEdit = false;
+    let todoListTitleEditText = "";
+
     (async () => {
-        if (code !== undefined) {
+        if (code !== "") {
             todoList = await TodoList.fetch(code);
         } else {
             todoList = await TodoList.create("My First TodoList!");
+            code = todoList.id;
+            dispatch("page_data_receive", { code: code });
         }
 
         todoList.updateCallback = () => {
             todoList = todoList;
         };
-        loading = false; 
-
+        todoListTitleEditText = todoList.name;
+        loading = false;
     })();
 
     async function addTodo(title: string, description: string): Promise<void> {
@@ -46,25 +51,43 @@
     }
 
     async function createIssue(title:string,description:string) {
-        await tsvscode.postMessage({type:"create-issue",value:{title,description}})
-    }
-    const dispatch = createEventDispatcher();
-
-    function todoListJoinOptions() {
-        dispatch("page_data_receive", { page: "todoListJoinOptions",auth });
+        await tsvscode.postMessage({ type:"create-issue", value:{ title, description }})
     }
     
+    async function updateTodoListName() : Promise<void> {
+        loading = true;
+        todoList.name = todoListTitleEditText;
+        enableTodoListTitleEdit = false;
+        loading = false;
+    }
+
+    function todoListJoinOptions() {
+        dispatch("page_data_receive", { page: "todoListJoinOptions", auth });
+    }
+
     // code for categories
     // let selectedCategory='Select Category'
     // let categories=['category1','category2','category3']
 </script>
 
-<h2 class="title">{todoList === undefined ? "Loading..." : todoList.name}</h2>
-<button  on:click={todoListJoinOptions} type="submit">
-    <div class="icon">
-        <i class="codicon codicon-arrow-left icon-align-fix," />
-    </div>
-</button>
+<div class="title">
+    <div on:click={todoListJoinOptions} class="icon back-button"><i class="codicon codicon-arrow-left"/></div>
+    {#if todoList === undefined}
+        <h2>Loading...</h2>
+    {:else}
+        {#if enableTodoListTitleEdit === false}
+            <h2>{todoList.name}</h2>
+            <div on:click={() => enableTodoListTitleEdit = true} class="icon"><i class="codicon codicon-edit" /></div>
+        {:else}
+            <input bind:value={todoListTitleEditText}>
+            <div on:click={(updateTodoListName)} class="icon"><i class="codicon codicon-check" /></div>
+        {/if}
+    {/if}
+</div>
+
+
+
+
 <TodoCode code={todoList ? todoList.id : ""} />
 
 <div
@@ -166,6 +189,11 @@
 </div>
 
 <style>
+
+    .back-button {
+        margin-right: 10px;
+    }
+
     .btn {
         padding-bottom: 10px;
         padding-top: 10px;
@@ -176,7 +204,16 @@
     }
     
     .title {
+        display: flex;
+        align-items: center;
         margin-bottom: 15px;
+    }
+
+    .title i {
+        position: relative;
+        top: 3px;
+        margin-left: 5px;
+        cursor: pointer;
     }
 
     .hidden {

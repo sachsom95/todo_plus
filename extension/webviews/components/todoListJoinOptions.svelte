@@ -5,26 +5,24 @@
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
 
-    export let auth:string;
+    export let auth: string;
 
     function initTodoList() {
-        dispatch("page_data_receive", { page: "todoList",auth });
+
+        dispatch("page_data_receive", { code: "", page: "todoList", auth });
     }
 
     function joinTodoList() {
-        dispatch("page_data_receive", { page: "joinTodoListInvite",auth });
+        dispatch("page_data_receive", { page: "joinTodoListInvite", auth });
     }
 
     function back(){
-        dispatch("page_data_receive", { page: "auth",auth });
+        dispatch("page_data_receive", { page: "auth", auth });
     }
+
 </script>
 
-<button  on:click={()=>back()} type="submit">
-    <div class="icon">
-        <i class="codicon codicon-arrow-left icon-align-fix," />
-    </div>
-</button>
+<div on:click={back} class="icon back-button"><i class="codicon codicon-arrow-left"/></div>
 
 <p class="p_heading">Create new collaborative todo list<br /></p>
 <p class="p_content">
@@ -40,6 +38,11 @@
 <button class="btn" on:click={joinTodoList}>Join a todo list</button>
 
 <style>
+    .back-button {
+        display: inline-block;
+        cursor: pointer;
+    }
+
     .p_heading {
         font-size: var(--vscode-font-size);
         font-weight: bold;
