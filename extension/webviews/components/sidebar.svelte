@@ -13,6 +13,7 @@
         | "todoListJoinOptions"
         | "notImplemented" = tsvscode.getState()?.currentPage || "auth";
 
+    let auth: string;
     let code: string = tsvscode.getState()?.code || "";
 
     const updateData = (event: any) => {
@@ -22,6 +23,9 @@
         if (event?.detail?.code !== undefined) {
             code = event.detail.code;
         }
+        if (event?.detail?.auth !== undefined) {
+            auth = event.detail.auth;
+        }
     };
 
     $: {
@@ -30,14 +34,18 @@
 
 </script>
 
-{#if currentPage === "auth" || currentPage === "initial"}
-    <Auth on:page_data_receive={updateData} />
+{#if currentPage === "auth" }
+    <Auth on:page_data_receive={updateData}/>
+
 {:else if currentPage === "todoListJoinOptions"}
-    <TodoListJoinOptions on:page_data_receive={updateData} />
+    <TodoListJoinOptions auth={auth} on:page_data_receive={updateData}/>
+
 {:else if currentPage === "todoList"}
-    <Todolist {code} on:page_data_receive={updateData} />
+    <Todolist code={code} auth={auth} on:page_data_receive={updateData}/>
+
 {:else if currentPage === "joinTodoListInvite"}
-    <JoinTodoListInvite on:page_data_receive={updateData} />
+    <JoinTodoListInvite auth={auth} on:page_data_receive={updateData}/>
+
 {:else if currentPage === "notImplemented"}
     <NotImplemented on:page_data_receive={updateData} />
 {:else}

@@ -47,7 +47,7 @@
     padding-top: 10px;
     text-align: justify;
   }
-
+ 
   .container_share {
     display: flex;
     flex-direction: column;

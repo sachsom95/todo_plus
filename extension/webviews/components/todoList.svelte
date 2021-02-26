@@ -9,7 +9,7 @@
     import { TodoItem } from "../../src/entities/TodoItem";
 
     export let code: string = "";
-
+    export let auth: string;
     const dispatch = createEventDispatcher();
 
     let loading = true;
@@ -50,6 +50,10 @@
         loading = false;
     }
 
+    async function createIssue(title:string,description:string) {
+        await tsvscode.postMessage({ type:"create-issue", value:{ title, description }})
+    }
+    
     async function updateTodoListName() : Promise<void> {
         loading = true;
         todoList.name = todoListTitleEditText;
@@ -58,7 +62,7 @@
     }
 
     function todoListJoinOptions() {
-        dispatch("page_data_receive", { page: "todoListJoinOptions" });
+        dispatch("page_data_receive", { page: "todoListJoinOptions", auth });
     }
 
     // code for categories
@@ -155,17 +159,17 @@
                         <h4>{todoItem.title}</h4>
                         <p class="description">{todoItem.description}</p>
                         <div class="interaction-buttons">
-                            <div class="icon-text">
-                                <div class="icon">
-                                    <i
-                                        class="codicon codicon-issues icon-align-fix"
-                                    />
+                            {#if auth}
+                                <div class="icon-text">
+                                    <div class="icon">
+                                        <i class="codicon codicon-issues icon-align-fix" />
+                                    </div>
+                                        <p on:click={()=>createIssue(todoItem.title,todoItem.description)}>Push as an issue</p>   
                                 </div>
-                                <p>Push as an issue</p>
-                            </div>
+                            {/if}
                             <div
                                 class="icon-text"
-                                on:click={() => deleteTodo(todoItem)}
+                                on:click={()=>deleteTodo(todoItem)}
                             >
                                 <div class="icon">
                                     <i
