@@ -4,7 +4,7 @@
  -->
 <script lang="ts">
     let inviteCode = "";
-    export let auth:string;
+    export let auth: string;
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
 

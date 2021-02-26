@@ -167,17 +167,20 @@
                             <p class="description">{todoItem.description}</p>
                             <div class="interaction-buttons">
                                 {#if auth}
-                                    <div class="icon-text">
+                                    <div 
+                                        class="icon-text"
+                                        on:click={()=>createIssue(todoItem.title, todoItem.description)}>
                                         <div class="icon">
                                             <i class="codicon codicon-issues icon-align-fix" />
                                         </div>
-                                        <p on:click={()=>createIssue(todoItem.title,todoItem.description)}>Push as an issue</p>   
+                                        <p>Push as an issue</p>   
                                     </div>
                                 {/if}
                                 <div
                                     class="icon-text"
                                     on:click={() => deleteTodo(todoItem)}>
                                     <div class="icon"><i class="codicon codicon-trash icon-align-fix"/></div>
+                                    <p>Delete</p>
                                 </div>
                             </div>
                         </div>
@@ -267,8 +270,12 @@
     .interaction-buttons {
         display: flex;
     }
-    .interaction-buttons p {
+
+    .interaction-buttons div {
         cursor: pointer;
+    }
+
+    .interaction-buttons p {
         margin-right: 15px;
         font-size: small;
     }
