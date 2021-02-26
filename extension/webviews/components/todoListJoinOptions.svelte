@@ -6,7 +6,7 @@
     const dispatch = createEventDispatcher();
 
     function initTodoList() {
-        dispatch("page_data_receive", { page: "todoList" });
+        dispatch("page_data_receive", { code: "", page: "todoList" });
     }
 
     function joinTodoList() {
