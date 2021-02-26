@@ -21,6 +21,7 @@ If the user is signed in with github, user can create an issue of a todo item by
 <p align="center">
 <img width="400" alt="Screenshot 2021-02-26 at 01 56 26" src="https://user-images.githubusercontent.com/55349036/109359741-e26d6f80-787d-11eb-9db0-4f0d3df097d6.gif">
 </p>
+
 ## Requirements
 
 1. [yarn](https://classic.yarnpkg.com/en/docs/install) \
