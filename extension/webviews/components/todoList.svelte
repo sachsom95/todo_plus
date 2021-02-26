@@ -16,6 +16,7 @@
     let title = "";
     let makeTodoVisiblity = true;
     let description = "";
+    let notfound = false;
 
     let todoList: TodoList;
 
@@ -24,7 +25,13 @@
 
     (async () => {
         if (code !== "") {
-            todoList = await TodoList.fetch(code);
+            try {
+                todoList = await TodoList.fetch(code);
+            } catch (error) {
+                console.error(error);
+                notfound = true;
+                return;
+            }
         } else {
             todoList = await TodoList.create("My First TodoList!");
             code = todoList.id;
@@ -50,6 +57,10 @@
         loading = false;
     }
 
+    function back() {
+        dispatch("page_data_receive", { page: "joinTodoListInvite" });
+    }
+
     async function createIssue(title:string,description:string) {
         await tsvscode.postMessage({ type:"create-issue", value:{ title, description }})
     }
@@ -70,125 +81,127 @@
     // let categories=['category1','category2','category3']
 </script>
 
-<div class="title">
-    <div on:click={todoListJoinOptions} class="icon back-button"><i class="codicon codicon-arrow-left"/></div>
-    {#if todoList === undefined}
-        <h2>Loading...</h2>
-    {:else}
-        {#if enableTodoListTitleEdit === false}
+
+{#if notfound}
+    <h2 class="title">Error: TodoList not found!</h2>
+    <input class="form_input" disabled bind:value={code}>
+    <button class="btn" on:click={back}>Try another code</button>
+{:else}
+    <div class="title">
+        <div on:click={todoListJoinOptions} class="icon back-button"><i class="codicon codicon-arrow-left"/></div>
+        {#if todoList === undefined}
+            <h2>Loading...</h2>
+        {:else if enableTodoListTitleEdit === false}
             <h2>{todoList.name}</h2>
             <div on:click={() => enableTodoListTitleEdit = true} class="icon"><i class="codicon codicon-edit" /></div>
         {:else}
             <input bind:value={todoListTitleEditText}>
             <div on:click={(updateTodoListName)} class="icon"><i class="codicon codicon-check" /></div>
         {/if}
-    {/if}
-</div>
+    </div>
 
+    <TodoCode code={todoList ? todoList.id : ""} />
 
+    <div
+        class="maketodo-toggle"
+        on:click={() => {
+            makeTodoVisiblity = !makeTodoVisiblity;
+        }}>
+        <p>Make Todos</p>
+        {#if makeTodoVisiblity}
+            <div class="icon"><i class="codicon codicon-chevron-up" /></div>
+        {:else}
+            <div class="icon"><i class="codicon codicon-chevron-down" /></div>
+        {/if}
+    </div>
+    {#if makeTodoVisiblity && todoList !== undefined}
+        <form
+            on:submit|preventDefault={() => {
+                if (title === "") return;
+                addTodo(title, description);
+                title = "";
+                description = "";
+            }}>
+            <p>Todo</p>
+            <input bind:value={title} />
+            <p>Description</p>
+            <textarea bind:value={description} />
+    
+            <!-- Code for categories -->
+            <!-- <label>Category:</label>
+            <br/>
+            <select value={selectedCategory}>
+                {#each categories as category}
+                    <option value={category}>
+                        {category}
+                    </option>
+                {/each}
+            </select> -->
 
-
-<TodoCode code={todoList ? todoList.id : ""} />
-
-<div
-    class="maketodo-toggle"
-    on:click={() => {
-        makeTodoVisiblity = !makeTodoVisiblity;
-    }}
->
-    <p>Make Todos</p>
-    {#if makeTodoVisiblity}
-        <div class="icon"><i class="codicon codicon-chevron-up" /></div>
-    {:else}
-        <div class="icon"><i class="codicon codicon-chevron-down" /></div>
-    {/if}
-</div>
-{#if makeTodoVisiblity && todoList !== undefined}
-    <form
-        on:submit|preventDefault={() => {
-            if (title === "") return;
-            addTodo(title, description);
-            title = "";
-            description = "";
-        }}
-    >
-        <p>Todo</p>
-        <input bind:value={title} />
-        <p>Description</p>
-        <textarea bind:value={description} />
-
-        <!-- Code for categories -->
-        <!-- <label>Category:</label>
-        <br/>
-        <select value={selectedCategory}>
-            {#each categories as category}
-                <option value={category}>
-                    {category}
-                </option>
-            {/each}
-        </select> -->
-
+            <br />
+            <button class="btn" type="submit">Add Todo</button>
+        </form>
         <br />
-        <button class="btn" type="submit">Add Todo</button>
-    </form>
-    <br />
-{/if}
+    {/if}
 
-<hr />
+    <hr />
 
-<p>View Todos</p>
-<div class="todo_container">
-    <ul class="todolist">
-        <p class:hidden={!loading} class="transition">Loading...</p>
+    <p>View Todos</p>
+    <div class="todo_container">
+        <ul class="todolist">
+            <p class:hidden={!loading} class="transition">Loading...</p>
 
-        {#if todoList !== undefined}
-            {#each todoList.todoItems as todoItem (todoItem.id)}
-                <li
-                    class:completed={todoItem.completed}
-                    class="todoitem transition"
-                >
-                    <input
-                        class="todocheckbox"
-                        type="checkbox"
-                        checked={todoItem.completed}
-                        on:click={() => {
-                            todoItem.completed = !todoItem.completed;
-                        }}
-                    />
-                    <div class="todo-text">
-                        <h4>{todoItem.title}</h4>
-                        <p class="description">{todoItem.description}</p>
-                        <div class="interaction-buttons">
-                            {#if auth}
-                                <div class="icon-text">
-                                    <div class="icon">
-                                        <i class="codicon codicon-issues icon-align-fix" />
-                                    </div>
+            {#if todoList !== undefined}
+                {#each todoList.todoItems as todoItem (todoItem.id)}
+                    <li
+                        class:completed={todoItem.completed}
+                        class="todoitem transition">
+                        <input
+                            class="todocheckbox"
+                            type="checkbox"
+                            checked={todoItem.completed}
+                            on:click={() => { todoItem.completed = !todoItem.completed; }}
+                        />
+                        <div class="todo-text">
+                            <h4>{todoItem.title}</h4>
+                            <p class="description">{todoItem.description}</p>
+                            <div class="interaction-buttons">
+                                {#if auth}
+                                    <div class="icon-text">
+                                        <div class="icon">
+                                            <i class="codicon codicon-issues icon-align-fix" />
+                                        </div>
                                         <p on:click={()=>createIssue(todoItem.title,todoItem.description)}>Push as an issue</p>   
+                                    </div>
+                                {/if}
+                                <div
+                                    class="icon-text"
+                                    on:click={() => deleteTodo(todoItem)}>
+                                    <div class="icon"><i class="codicon codicon-trash icon-align-fix"/></div>
                                 </div>
-                            {/if}
-                            <div
-                                class="icon-text"
-                                on:click={()=>deleteTodo(todoItem)}
-                            >
-                                <div class="icon">
-                                    <i
-                                        class="codicon codicon-trash icon-align-fix"
-                                    />
-                                </div>
-                                <p>Delete</p>
                             </div>
                         </div>
-                    </div>
-                </li>
-            {:else}
-                <p>Add your first todo!</p>
-            {/each}
-        {/if}
-    </ul>
-</div>
+                    </li>
+                {:else}
+                    <p>Add your first todo!</p>
+                {/each}
+            {/if}
+        </ul>
+    </div>
+{/if}
 
 <style>
+
+    .form_input {   
+        padding-top: 10px;
+        padding-bottom: 10px;
+        text-align: center;
+        height: unset;
+    }
+
+    .form_input::placeholder {
+        text-align: center;
+    }
 
     .back-button {
         margin-right: 10px;
