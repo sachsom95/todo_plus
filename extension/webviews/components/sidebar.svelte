@@ -13,8 +13,12 @@
         | "todoListJoinOptions"
         | "notImplemented" = tsvscode.getState()?.currentPage || "auth";
 
-    let auth: string;
+    let auth: string = tsvscode.getState()?.auth || "";
     let code: string = tsvscode.getState()?.code || "";
+
+    $: {
+        tsvscode.setState({code, currentPage, auth});
+    }
 
     const updateData = (event: any) => {
         if (event?.detail?.page !== undefined) {
@@ -28,9 +32,7 @@
         }
     };
 
-    $: {
-        tsvscode.setState({code,currentPage})
-    }
+    
 
 </script>
 
