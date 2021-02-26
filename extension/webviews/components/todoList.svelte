@@ -8,7 +8,9 @@
     import { TodoList } from "../../src/entities/TodoList";
     import { TodoItem } from "../../src/entities/TodoItem";
 
-    export let code: string;
+    export let code: string = "";
+
+    const dispatch = createEventDispatcher();
 
     let loading = true;
     let title = "";
@@ -21,10 +23,12 @@
     let todoListTitleEditText = "";
 
     (async () => {
-        if (code !== undefined) {
+        if (code !== "") {
             todoList = await TodoList.fetch(code);
         } else {
             todoList = await TodoList.create("My First TodoList!");
+            code = todoList.id;
+            dispatch("page_data_receive", { code: code });
         }
 
         todoList.updateCallback = () => {
@@ -53,7 +57,6 @@
         loading = false;
     }
 
-    const dispatch = createEventDispatcher();
     function todoListJoinOptions() {
         dispatch("page_data_receive", { page: "todoListJoinOptions" });
     }
@@ -64,10 +67,10 @@
 </script>
 
 <div class="title">
+    <div on:click={todoListJoinOptions} class="icon back-button"><i class="codicon codicon-arrow-left"/></div>
     {#if todoList === undefined}
         <h2>Loading...</h2>
     {:else}
-        <div on:click={todoListJoinOptions} class="icon back-button"><i class="codicon codicon-arrow-left"/></div>
         {#if enableTodoListTitleEdit === false}
             <h2>{todoList.name}</h2>
             <div on:click={() => enableTodoListTitleEdit = true} class="icon"><i class="codicon codicon-edit" /></div>
