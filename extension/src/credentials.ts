@@ -49,24 +49,19 @@ export class Credentials {
 	}
 
 	async getOctokit(): Promise<Octokit.Octokit> {
-		try {
-			if (this.octokit) {
-				return this.octokit;
-			}
-	
-			/**
-			 * When the `createIfNone` flag is passed, a modal dialog will be shown asking the user to sign in.
-			 * Note that this can throw if the user clicks cancel.
-			 */
-			const session = await vscode.authentication.getSession(GITHUB_AUTH_PROVIDER_ID, SCOPES, { createIfNone: true });
-			this.octokit = new Octokit.Octokit({
-				auth: session.accessToken
-			});
-	
+		if (this.octokit) {
 			return this.octokit;
-		} catch(e) {
-            console.error("setOctokit error:", e);
-        }
-		
+		}
+
+		/**
+		 * When the `createIfNone` flag is passed, a modal dialog will be shown asking the user to sign in.
+		 * Note that this can throw if the user clicks cancel.
+		 */
+		const session = await vscode.authentication.getSession(GITHUB_AUTH_PROVIDER_ID, SCOPES, { createIfNone: true });
+		this.octokit = new Octokit.Octokit({
+			auth: session.accessToken
+		});
+
+		return this.octokit;
 	}
 }
