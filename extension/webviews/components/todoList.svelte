@@ -2,15 +2,14 @@
     This component is the actual todoList
  -->
 <script lang="ts">
-    import TodoCode from "./todoCode.svelte";
 
+    import { createEventDispatcher } from "svelte";
+    import TodoCode from "./todoCode.svelte";
     import { TodoList } from "../../src/entities/TodoList";
     import { TodoItem } from "../../src/entities/TodoItem";
 
-    import { createEventDispatcher } from "svelte";
-
-    export let code: string;
-
+    export let code: string = "";
+    export let auth: string;
     const dispatch = createEventDispatcher();
 
     let loading = true;
@@ -25,7 +24,7 @@
     let todoListTitleEditText = "";
 
     (async () => {
-        if (code !== undefined) {
+        if (code !== "") {
             try {
                 todoList = await TodoList.fetch(code);
             } catch (error) {
@@ -35,6 +34,8 @@
             }
         } else {
             todoList = await TodoList.create("My First TodoList!");
+            code = todoList.id;
+            dispatch("page_data_receive", { code: code });
         }
 
         todoList.updateCallback = () => {
@@ -59,12 +60,20 @@
     function back() {
         dispatch("page_data_receive", { page: "joinTodoListInvite" });
     }
+
+    async function createIssue(title:string,description:string) {
+        await tsvscode.postMessage({ type:"create-issue", value:{ title, description }})
+    }
     
     async function updateTodoListName() : Promise<void> {
         loading = true;
         todoList.name = todoListTitleEditText;
         enableTodoListTitleEdit = false;
         loading = false;
+    }
+
+    function todoListJoinOptions() {
+        dispatch("page_data_receive", { page: "todoListJoinOptions", auth });
     }
 
     // code for categories
@@ -79,6 +88,7 @@
     <button class="btn" on:click={back}>Try another code</button>
 {:else}
     <div class="title">
+        <div on:click={todoListJoinOptions} class="icon back-button"><i class="codicon codicon-arrow-left"/></div>
         {#if todoList === undefined}
             <h2>Loading...</h2>
         {:else if enableTodoListTitleEdit === false}
@@ -150,18 +160,20 @@
                             class="todocheckbox"
                             type="checkbox"
                             checked={todoItem.completed}
-                            on:click={() => {
-                                todoItem.completed = !todoItem.completed;
-                            }}
+                            on:click={() => { todoItem.completed = !todoItem.completed; }}
                         />
                         <div class="todo-text">
                             <h4>{todoItem.title}</h4>
                             <p class="description">{todoItem.description}</p>
                             <div class="interaction-buttons">
-                                <div class="icon-text">
-                                    <div class="icon"><i class="codicon codicon-issues icon-align-fix"/></div>
-                                    <p>Push as an issue</p>
-                                </div>
+                                {#if auth}
+                                    <div class="icon-text">
+                                        <div class="icon">
+                                            <i class="codicon codicon-issues icon-align-fix" />
+                                        </div>
+                                        <p on:click={()=>createIssue(todoItem.title,todoItem.description)}>Push as an issue</p>   
+                                    </div>
+                                {/if}
                                 <div
                                     class="icon-text"
                                     on:click={() => deleteTodo(todoItem)}>
@@ -189,6 +201,10 @@
 
     .form_input::placeholder {
         text-align: center;
+    }
+
+    .back-button {
+        margin-right: 10px;
     }
 
     .btn {

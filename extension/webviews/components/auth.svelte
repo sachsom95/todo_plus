@@ -3,15 +3,30 @@
     This component is the login page github/Anonymous   
 -->
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
     const dispatch = createEventDispatcher();
+    let authStatus='';
 
-    function loginGitHub() {
-        dispatch("page_data_receive", { page: "notImplemented" });
+    onMount(async()=>{
+        window.addEventListener('message', async (event) => {
+        const message = event.data; 
+
+            switch (message.type) {
+                case 'auth-status':
+                    authStatus = message.value
+                    if (authStatus === 'authenticated') {
+                        dispatch("page_data_receive", { page: "todoListJoinOptions", auth:true });
+                    }
+            }
+        });
+    })
+
+    async function loginGitHub() {
+        tsvscode.postMessage({ type:"authenticate", value:undefined });
     }
 
-    function loginAnonymous() {
-        dispatch("page_data_receive", { page: "todoListJoinOptions" });
+    async function loginAnonymous() {
+        dispatch("page_data_receive", { page: "todoListJoinOptions", auth:false });
     }
 </script>
 
@@ -24,7 +39,7 @@
     <button class="btn" on:click={loginGitHub} type="submit">
         <div class="icon">
             <i class="codicon codicon-github-inverted icon-align-fix" />
-            Sign In with GitHub
+            Continue with GitHub
         </div>
     </button>
     <br />

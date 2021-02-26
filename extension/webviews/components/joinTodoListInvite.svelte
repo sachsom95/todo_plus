@@ -4,16 +4,16 @@
  -->
 <script lang="ts">
     let inviteCode = "";
-
+    export let auth:string;
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
 
     function cancel() {
-        dispatch("page_data_receive", { page: "todoListJoinOptions" });
+        dispatch("page_data_receive", { page: "todoListJoinOptions", auth });
     }
 
     function join() {
-        dispatch("page_data_receive", { page: "todoList", code: inviteCode });
+        dispatch("page_data_receive", { page: "todoList", code: inviteCode, auth });
     }
 
     function onRightClick() {

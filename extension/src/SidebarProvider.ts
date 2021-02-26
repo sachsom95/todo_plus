@@ -22,6 +22,24 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
+        case 'authenticate': {
+          var result: any = await vscode.commands.executeCommand("todo-plus-plus.authenticate");
+          if (!result) {
+            webviewView.webview.postMessage({type:"auth-status",value:'authenticated'});
+          } else {
+            vscode.window.showErrorMessage(result.message);
+            webviewView.webview.postMessage({type:"auth-status",value:'unauthenticated'});
+          }
+          break;
+        }
+        case 'create-issue': {
+          vscode.commands.executeCommand("todo-plus-plus.createIssue",data.value.title,data.value.description);
+          break;
+        }
+        case 'auth-status': {
+          webviewView.webview.postMessage({type:"auth-status",value:'authenticated'});
+          break;
+        }
         case "onInfo": {
           if (!data.value) {
             return;
@@ -82,12 +100,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
 
 			</head>
-      <script nonce="${nonce}">
-      const tsvscode = acquireVsCodeApi();
-      </script>
+      <script nonce="${nonce}">const tsvscode = acquireVsCodeApi();</script>
       <body>
-				<script nonce="${nonce}" src="${scriptUri}"></script>
-			</body>
+      <script nonce="${nonce}" src="${scriptUri}"></script>
+      </body>
 			</html>`;
   }
 }

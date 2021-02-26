@@ -11,7 +11,9 @@
 	],
 	"activationEvents": [
 		"onCommand:todo-plus-plus.helloWorld",
-		"onView:todo-plus-plus-sidebar"
+		"onView:todo-plus-plus-sidebar",
+		"onCommand:todo-plus-plus.createIssue",
+		"onCommand:todo-plus-plus.authenticate"	
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
@@ -38,8 +40,20 @@
 		"commands": [
 			{
 				"command": "todo-plus-plus.helloWorld",
-				"title": "Hello World"
+				"title": "Hello World",
+				"category": "Todo++"
+			},
+			{
+				"command": "todo-plus-plus.createIssue",
+				"title": "Create an Issue",
+				"category": "Todo++"
+			},
+			{
+				"command": "todo-plus-plus.authenticate",
+				"title": "Authenticate",
+				"category": "Todo++"
 			}
+			
 		]
 	},
 	"scripts": {
@@ -81,6 +95,7 @@
 		"webpack-cli": "^4.4.0"
 	},
 	"dependencies": {
+		"@octokit/rest": "^18.2.0",
 		"firebase": "^8.2.8",
 		"vscode-codicons": "^0.0.14"
 	}
