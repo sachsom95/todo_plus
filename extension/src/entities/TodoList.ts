@@ -9,7 +9,7 @@ interface ITodoList {
 export class TodoList {
 
     // Used for the Firestore collection name
-    static readonly COLLECTION_NAME: string = TodoList.name;
+    static readonly COLLECTION_NAME: string = "TodoList";
 
     // Readonly properties as they should not be modified (for now at least).
     readonly id: string;

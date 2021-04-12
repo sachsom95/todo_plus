@@ -1,10 +1,17 @@
 {
 	"name": "todo-plus-plus",
-	"displayName": "Todo_plus_plus",
+	"displayName": "Todo++",
 	"description": "An overly fancy todo list in vscode",
-	"version": "0.0.1",
+	"version": "0.0.3",
 	"engines": {
 		"vscode": "^1.53.0"
+	},
+	"license": "MIT",
+	"publisher": "TeamSSL",
+	"icon": "extension_icon.png",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/sachsom95/todo_plus.git"
 	},
 	"categories": [
 		"Other"
