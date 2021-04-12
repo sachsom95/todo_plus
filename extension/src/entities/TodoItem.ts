@@ -15,7 +15,7 @@ interface ITodoItem {
 export class TodoItem {
 
     // Used for the Firestore collection name
-    static readonly COLLECTION_NAME: string = TodoItem.name;
+    static readonly COLLECTION_NAME: string = "TodoItem";
 
     readonly id: string;
     readonly todoListId: string;
