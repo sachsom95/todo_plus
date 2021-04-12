@@ -16,6 +16,7 @@
 	"categories": [
 		"Other"
 	],
+	"license": "MIT",
 	"activationEvents": [
 		"onView:todo-plus-plus-sidebar",
 		"onCommand:todo-plus-plus.createIssue",
