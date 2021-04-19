@@ -1,4 +1,5 @@
 # Todo++ VS Code Extension
+<img width="1043" alt="Screenshot 2021-04-19 at 19 50 29" src="https://user-images.githubusercontent.com/55349036/115287791-95549e00-a148-11eb-83ae-00ea403e8736.png">
 
 Todo++ is a VS Code extension for you to list all your todo items and collaborate with others on their Todolists.
 
